@@ -1,0 +1,413 @@
+:root {
+    --fundoPrincipal: #0D1017;
+    --sideBar:#151A25;
+    --cards: #1D2433;
+    --roxoPrincipal: #8B5CF6;
+    --roxoHover: #A78BFA;
+    --textoPrincipal: #F1F3F9;
+    --textoSegundario: #9CA3B5;
+    --bordas: #30384A;
+    --sucesso: #22C55E;
+    --erro: #EF4444;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: "Roboto Mono", monospace;
+    background: var(--fundoPrincipal);
+    color: var(--textoPrincipal);
+    min-height: 100vh;
+    width: 100%;
+}
+
+body::-webkit-scrollbar{
+    display: none;
+}
+
+.headerNodus{
+    display: flex;
+    justify-content: space-between;
+    background: var(--sideBar);
+    padding: 15px;
+    align-items: center;
+    border-bottom: var(--bordas) solid 1px;
+}
+
+.headerOptions{
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.searchPost{
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--textoPrincipal);
+}
+
+.inputSearchPost{
+    outline: none;
+    background: none;
+    border: none;
+    color: var(--textoPrincipal);
+}
+
+.btnSearchPost{
+    background: none;
+    border: none;
+    color: var(--textoPrincipal);
+}
+
+.btnOption{
+    background: none;
+    border: none;
+    color: var(--textoPrincipal);
+    background: var(--fundoPrincipal);
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 5px;
+    position: relative;
+    transition: all .5s ease-in-out;
+}
+
+.btnOption::after{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    border: 2px solid var(--roxoPrincipal);
+}
+
+.btnOption::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    border-left: 2px solid var(--roxoHover);
+    z-index: 400;
+    opacity: 0;
+    transition: transform .5s ease-in-out;
+}
+
+.btnOption:hover::before{
+    transform: rotate(360deg);
+    opacity: 1;
+}
+
+.headerSearchMobile{
+    display: none;
+}
+
+.overlayModalPost{
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    pointer-events: none;
+    backdrop-filter: blur(5px);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modalPost{
+    background: var(--sideBar);
+    width: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    height: 50%;
+    border-radius: 10px;
+    position: relative;
+}
+
+.overlayModalPost.active{
+    opacity: 1;
+    width: 100%;
+    height: 100vh;
+    pointer-events: all;
+    transform: translate(-50%, -50%);
+    animation: aparecerModal .5s ease-in-out;
+}
+
+@keyframes aparecerModal {
+    0%{
+        transform: translate(-100%,-50%);
+    } 100%{
+        transform: translate(-50%, -50%);
+    }
+}
+
+.formModalPost{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 90%;
+    height: 100%;
+    gap: 10px;
+}
+
+.boxBtnClose{
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 5px;
+}
+
+.btnCloseModal{
+    background: none;
+    border: none;
+    color: var(--textoPrincipal);
+    font-size: 1.2rem;
+    transition: .5s ease-in-out;
+}
+
+.btnCloseModal:hover{
+    color: var(--erro);
+    transform: rotate(90deg);
+}
+
+.boxInputPost{
+    width: 100%;
+}
+
+.inputModalPost, .textareaModalPost{
+    background: none;
+    resize: none;
+    width: 90%;
+    color: var(--textoPrincipal);
+    overflow: hidden;
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.inputModalPost{
+    border-bottom: 1px solid var(--textoSegundario);
+}
+
+.inputModalPost:focus{
+    border-bottom: 1px solid var(--roxoPrincipal);
+    outline: none;
+}
+
+.textareaModalPost{
+    border: 1px solid var(--textoSegundario);
+    height: 100px;
+}
+
+.textareaModalPost:focus{
+    outline: 1px solid var(--roxoPrincipal);
+}
+
+.containerLayout{
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    place-items: center;
+    min-height: calc(100vh - 70px);
+}
+
+.sidebarExplorer, .sidebarHot{
+    background: var(--sideBar);
+    width: 100%;
+    height: 100%;
+}
+
+.sidebarExplorer nav, .boxHotBar{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 15px;
+    width: 95%;
+    height: 60%;
+    font-size: 1.2rem;
+    margin: auto;
+}
+
+.linkExplorer, .sidebarExplorer, .boxHotBar ul li{
+    color: var(--textoSegundario);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.linkExplorer{
+    transition: transform .4s ease-in-out;
+}
+
+.linkExplorer:hover{
+    transform: translateX(10px);
+    color: var(--roxoHover);
+}
+
+.select{
+    transform: translateX(10px);
+    text-decoration: none;
+    color: var(--roxoPrincipal);
+}
+
+.select:hover{
+    color: var(--roxoPrincipal);
+}
+
+.mainPosts{
+    grid-column: 2/5;
+    height: 100%;
+    width: 100%;
+    border: 1px solid var(--bordas);
+    border-bottom: 0;
+    border-top: 0;
+}
+
+.secPosts{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.infoSecPosts{
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+}
+
+.containerPosts{
+    width: 95%;
+    margin: auto;
+}
+
+.boxPost{
+    width: 90%;
+    margin: auto;
+    border-radius: 10px;
+    padding: 40px 20px;
+    background: var(--cards);
+    gap: 5px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+}
+
+.postCima{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex: 0;
+}
+
+.userPublicPost{
+    display: flex;
+    gap: 5px;
+    z-index: 400;
+    cursor: pointer;
+}
+
+.logoUserPost{
+    border: 1px solid var(--roxoPrincipal);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+}
+
+.postTags{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.listTags{
+    display: flex;
+    list-style: none;
+    gap: 15px;
+}
+
+.tag{
+    background: var(--roxoPrincipal);
+    border-radius: 5px;
+    padding: 5px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.infoPost{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    flex: 1;
+    gap: 5px;
+}
+
+.contPost{
+    font-family: sans-serif;
+}
+
+.boxHotBar ul li{
+    cursor: pointer;
+    list-style: none;
+}
+
+@media (max-width: 768px) {
+    .headerNodus{
+        justify-content: space-between;
+    }
+
+    .headerSearchMobile{
+        display: block;
+    }
+
+    .searchPost{
+        display: none;
+    }
+
+    .headerBtns{
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+    }
+    
+    .sidebarExplorer, .sidebarHot{
+        display: none;
+    }
+    
+    .containerLayout {
+        grid-template-columns: minmax(0, 1fr);
+        height: auto;
+    }
+
+    .mainPosts {
+        grid-column: 1;
+        min-width: 0;
+    }
+
+    .modalPost{
+        width: 90%;
+    }
+
+    .boxPost{
+        padding: 20px;
+        gap: 15px;
+    }
+
+    .postCima{
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .postTags{
+        justify-content: flex-start;
+    }
+}

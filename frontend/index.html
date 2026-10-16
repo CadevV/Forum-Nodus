@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nodus</title>
+
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Space+Grotesk:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script
+      src="https://kit.fontawesome.com/8bf2916310.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="js/api.js" defer></script>
+    <script src="js/script.js" defer></script>
+  </head>
+  <body>
+    <header class="headerNodus">
+      <div class="headerTitulo">
+        <h1>Nodus</h1>
+      </div>
+
+      <div class="headerOptions">
+        <div class="optionsSearch">
+          <form class="formSearch">
+            <div class="searchPost">
+              <input
+                type="text"
+                id="searchPost"
+                class="inputSearchPost"
+                placeholder="procurar post"
+                aria-label="procurar post"
+              />
+              <button
+                type="submit"
+                aria-label="pesquisar"
+                class="btnSearchPost"
+              >
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div class="headerBtns">
+          <button
+            class="btnOption headerAcont"
+            type="button"
+            aria-label="Minha conta"
+          >
+            <i class="fa-solid fa-user" aria-hidden="true"></i>
+          </button>
+
+          <button
+            class="btnOption headerConfig"
+            type="button"
+            aria-label="configuraçoes"
+          >
+            <i class="fa-solid fa-gear" aria-hidden="true"></i>
+          </button>
+
+          <button
+            class="btnOption headerNewPost"
+            type="button"
+            aria-label="criar novo post"
+          >
+            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+          </button>
+
+          <button
+            class="btnOption headerSearchMobile"
+            type="button"
+            aria-label="Minha conta"
+          >
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <article class="overlayModalPost">
+      <div class="modalPost">
+        <form class="formModalPost">
+          <div class="boxBtnClose">
+            <button type="button" class="btnCloseModal"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+
+          <div class="boxInputPost">
+            <label for="tagProgramação">
+              <input type="radio" name="tag" value="programação" id="tagProgramação">
+            </label>
+            
+            <label for="tagTecnologia">
+              <input type="radio" name="tag" value="tecnologia" id="tagTecnologia">
+            </label>
+            
+            <label for="tagJogos">
+              <input type="radio" name="tag" value="jogos" id="tagJogos">
+            </label>
+            
+          </div>
+
+          <div class="boxInputPost">
+            <input type="text" placeholder="Titulo da postagem" class="inputModalPost"/>
+          </div>
+
+          <div class="boxInputPost">
+            <textarea type="text" placeholder="Escreva o conteudo" class="textareaModalPost"></textarea>
+          </div>
+
+          <button type="submit" class="btnCriarPost">Enviar Post</button>
+        </form>
+      </div>
+    </article>
+
+    <div class="containerLayout">
+      <aside class="sidebarExplorer">
+        <nav>
+          <div>
+            <h3>Explorar</h3>
+            <ul>
+              <li class="select linkExplorer">Geral</li>
+              <li class="linkExplorer">Seguindo</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3>Categorias</h3>
+            <ul>
+              <li class="linkExplorer select">Geral</li>
+              <li class="linkExplorer">Programação</li>
+              <li class="linkExplorer">Jogos</li>
+              <li class="linkExplorer">Tecnologia</li>
+            </ul>
+          </div>
+        </nav>
+      </aside>
+
+      <main class="mainPosts">
+        <section class="secPosts">
+          <div class="infoSecPosts">
+            <h2>Publicações</h2>
+
+            <select name="selecionarFiltro" id="selecionarFiltro">
+              <option value="recentes">Recentes</option>
+              <option value="emAlta">Em Alta</option>
+            </select>
+          </div>
+
+          <div class="containerPosts">
+            <article class="boxPost">
+              <div class="postCima">
+                <div class="userPublicPost">
+                  <div class="logoUserPost"></div>
+                  <h4>Epaminondas</h4>
+                </div>
+
+                <div class="postTags">
+                  <ul class="listTags">
+                    <li class="tag">admin</li>
+                    <li class="tag">sistema</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="infoPost">
+                <h2 class="titlePost">Teste admin</h2>
+                <p class="contPost">
+                  Esse post e meramente demostrativo feito pelo sistema
+                </p>
+              </div>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <aside class="sidebarHot">
+        <div class="boxHotBar">
+          <h3>Em alta</h3>
+          <ul>
+            <li>#Programação</li>
+            <li>#Tecnologia</li>
+            <li>#Jogos</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </body>
+</html>
