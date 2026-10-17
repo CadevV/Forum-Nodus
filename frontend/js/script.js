@@ -33,7 +33,6 @@ async function criarPost(){
     const valorConteudo = inputTextareaUsuario.value
 
     if(!valorAssunto || !valorTitulo || !valorConteudo) return
-    if(valorTitulo.includes("<")) return
 
     const newPost = 
     {
@@ -55,23 +54,31 @@ async function criarPost(){
 
             <div class="postTags">
                 <ul class="listTags">
-                    <li class="tag">${newPost.tags}</li>
+                    <li class="tag"></li>
                 </ul>
             </div>
         </div>
 
         <div class="infoPost">
-            <h2 class="titlePost">${newPost.titulo}</h2>
+            <h2 class="titlePost"></h2>
             <p class="contPost">
-                ${newPost.conteudo}
+                
             </p>
         </div>
     `
+    const tag = elementNewPost.querySelector('.tag')
+    const titulo = elementNewPost.querySelector('.titlePost')
+    const conteudo = elementNewPost.querySelector('.contPost')
+
+    tag.textContent = valorAssunto
+    titulo.textContent = valorTitulo.trim()
+    conteudo.textContent = valorConteudo.trim()
+
+    const resultado = await criarPostApi(newPost.tags, newPost.titulo, newPost.conteudo)
+
     containerPosts.appendChild(elementNewPost)
 
-    const result = await criarPostApi(newPost.tags, newPost.titulo, newPost.conteudo)
-
-    console.log(result)
+    console.log(resultado)
     closeModalPost()
 }
 
@@ -79,7 +86,7 @@ async function recuperarPost() {
     const result = await recuperarPostApi()
 
     postFront.push(...result)
-    
+
     for(let i = 0; i<result.length; i++){
         const elementNewPost = document.createElement("article")
         elementNewPost.classList.add("boxPost")

@@ -1,5 +1,6 @@
 import express from "express";
 import cors from 'cors';
+import { z } from 'zod';
 
 const app = express()
 const port = 3000
@@ -11,13 +12,29 @@ const listaPost = []
 
 let id = 0
 
+const postValidado = z.object({
+    tags: z.string().lowercase(),
+    titulo: z.string().min(3).max(20),
+    conteudo: z.string().min(5).max(200)
+})
+
 app.post('/post', (req, res)=>{
-    const {tags,titulo,conteudo} = req.body
+    const resultado = postValidado.safeParse(req.body)
 
-    listaPost.push({tags,titulo,conteudo})
-    listaPost[id].id = id++
+    if(!resultado.success){
+        return res.status(400).json({erros: resultado.error.issues})
+    }
+    
+    const dados = resultado.data
 
-    return res.status(201).json(listaPost[id - 1])
+    const novoPost = {
+        id:id++,
+        ...dados
+    }
+
+    listaPost.push(novoPost)
+
+    return res.status(201).json("post criado")
 })
 
 app.get('/post', (req, res)=>{

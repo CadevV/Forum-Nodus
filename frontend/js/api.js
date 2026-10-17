@@ -23,9 +23,11 @@ async function criarPostApi(tags, titulo, conteudo) {
         body: JSON.stringify(post)
     })
 
-    const dados = await resposta.json()
-
-    return dados
+    if(!resposta.ok){
+        throw new Error("post invalido")
+    }
+    
+    return await resposta.json()
 }
 
 async function recuperarPostApi() {
