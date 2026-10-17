@@ -1,58 +1,67 @@
-const btnOpenModal = document.querySelector('.headerNewPost')
-const btnCloseModal = document.querySelector('.btnCloseModal')
-const modalPost = document.querySelector('.overlayModalPost')
-const boxModalPost = document.querySelector('.modalPost')
-const formPost = document.querySelector('.formModalPost')
-const inputTituloUsuario = document.querySelector('.inputModalPost')
-const inputTextareaUsuario = document.querySelector('.textareaModalPost')
-const containerPosts = document.querySelector('.containerPosts')
+const inputSearch = document.querySelector(".inputSearchPost");
+const btnOpenModal = document.querySelector(".headerNewPost");
+const btnOpenLogin = document.querySelector(".headerAcont");
+const btnCloseModal = document.querySelectorAll(".btnCloseModal");
+const modalPost = document.querySelector(".overlayModalPost");
+const boxModalPost = document.querySelector(".modalPost");
+const modalLogin = document.querySelector(".overlayModalLogin");
+const boxModalLogin = document.querySelector(".modalLogin");
+const formPost = document.querySelector(".formModalPost");
+const inputTituloUsuario = document.querySelector(".inputModalPost");
+const inputTextareaUsuario = document.querySelector(".textareaModalPost");
+const containerPosts = document.querySelector(".containerPosts");
 
-const usuario = 
-{
-    status: true
+const usuario = {
+  status: true,
+};
+
+const postFront = [];
+
+function openModalPost(modal, boxModal) {
+  modal.classList.add("active");
+  boxModal.classList.add("active");
 }
 
-const postFront = []
+function closeModalPost(modal, boxModal) {
+  modal.classList.remove("active");
+  boxModal.classList.remove("active");
+}
 
-function openModalPost(){
-    if(usuario.status){
-        modalPost.classList.add('active')
-        boxModalPost.classList.add('active')
+function buscarPost() {
+  const valorSearch = inputSearch.value;
+  const postAtuais = document.querySelectorAll(".boxPost");
+
+  postAtuais.forEach((post) => {
+    const titulo = post.querySelector(".titlePost").textContent.toLowerCase();
+    if (titulo.includes(valorSearch)) {
+      post.classList.remove("off");
+      return;
     }
+    post.classList.add("off");
+  });
 }
 
-function closeModalPost(){
-    modalPost.classList.remove('active')
-    boxModalPost.classList.remove('active')
-}
+async function criarPost() {
+  const assuntoSelecionado = document.querySelector("input[name=tag]:checked");
 
-function buscarPost(){
-    
-}
+  if (!assuntoSelecionado) return;
 
-async function criarPost(){
-    const assuntoSelecionado = document.querySelector('input[name=tag]:checked')
+  const valorAssunto = assuntoSelecionado.value;
+  const valorTitulo = inputTituloUsuario.value;
+  const valorConteudo = inputTextareaUsuario.value;
 
-    if(!assuntoSelecionado) return
+  if (!valorAssunto || !valorTitulo || !valorConteudo) return;
 
-    const valorAssunto = assuntoSelecionado.value
-    const valorTitulo = inputTituloUsuario.value
-    const valorConteudo = inputTextareaUsuario.value
+  const newPost = {
+    tags: valorAssunto,
+    titulo: valorTitulo,
+    conteudo: valorConteudo,
+  };
 
-    if(!valorAssunto || !valorTitulo || !valorConteudo) return
+  const elementNewPost = document.createElement("article");
+  elementNewPost.classList.add("boxPost");
 
-    const newPost = 
-    {
-        "tags": valorAssunto,
-        "titulo": valorTitulo,
-        "conteudo": valorConteudo
-    }
-
-    const elementNewPost = document.createElement("article")
-    elementNewPost.classList.add("boxPost")
-
-    elementNewPost.innerHTML = 
-    `
+  elementNewPost.innerHTML = `
         <div class="postCima">
             <div class="userPublicPost">
                 <div class="logoUserPost"></div>
@@ -72,34 +81,37 @@ async function criarPost(){
                 
             </p>
         </div>
-    `
-    const tag = elementNewPost.querySelector('.tag')
-    const titulo = elementNewPost.querySelector('.titlePost')
-    const conteudo = elementNewPost.querySelector('.contPost')
+    `;
+  const tag = elementNewPost.querySelector(".tag");
+  const titulo = elementNewPost.querySelector(".titlePost");
+  const conteudo = elementNewPost.querySelector(".contPost");
 
-    tag.textContent = valorAssunto
-    titulo.textContent = valorTitulo.trim()
-    conteudo.textContent = valorConteudo.trim()
+  tag.textContent = valorAssunto;
+  titulo.textContent = valorTitulo.trim();
+  conteudo.textContent = valorConteudo.trim();
 
-    const resultado = await criarPostApi(newPost.tags, newPost.titulo, newPost.conteudo)
+  const resultado = await criarPostApi(
+    newPost.tags,
+    newPost.titulo,
+    newPost.conteudo,
+  );
 
-    containerPosts.appendChild(elementNewPost)
+  containerPosts.appendChild(elementNewPost);
 
-    console.log(resultado)
-    closeModalPost()
+  console.log(resultado);
+  closeModalPost();
 }
 
 async function recuperarPost() {
-    const result = await recuperarPostApi()
+  const result = await recuperarPostApi();
 
-    postFront.push(...result)
+  postFront.push(...result);
 
-    for(let i = 0; i<result.length; i++){
-        const elementNewPost = document.createElement("article")
-        elementNewPost.classList.add("boxPost")
+  for (let i = 0; i < result.length; i++) {
+    const elementNewPost = document.createElement("article");
+    elementNewPost.classList.add("boxPost");
 
-        elementNewPost.innerHTML = 
-        `
+    elementNewPost.innerHTML = `
             <div class="postCima">
                 <div class="userPublicPost">
                     <div class="logoUserPost"></div>
@@ -119,16 +131,35 @@ async function recuperarPost() {
                     ${postFront[i].conteudo}
                 </p>
             </div>
-        `
-        containerPosts.appendChild(elementNewPost)
-    }
+        `;
+    containerPosts.appendChild(elementNewPost);
+  }
 }
 
-btnOpenModal.addEventListener('click', openModalPost)
-btnCloseModal.addEventListener('click', closeModalPost)
-formPost.addEventListener('submit', (event)=>{
-    event.preventDefault()
-    criarPost()
-})
+btnOpenModal.addEventListener("click", () => {
+  openModalPost(modalPost, boxModalPost);
+});
 
-recuperarPost()
+btnCloseModal.forEach((element) => {
+  element.addEventListener("click", () => {
+    closeModalPost(modalPost, boxModalPost);
+  });
+});
+
+btnCloseModal.forEach((element) => {
+  element.addEventListener("click", () => {
+    closeModalPost(modalLogin, boxModalLogin);
+  });
+});
+
+btnOpenLogin.addEventListener("click", () => {
+  openModalPost(modalLogin, boxModalLogin);
+});
+
+inputSearch.addEventListener("input", buscarPost);
+formPost.addEventListener("submit", (event) => {
+  event.preventDefault();
+  criarPost();
+});
+
+recuperarPost();

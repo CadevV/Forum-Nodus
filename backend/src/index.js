@@ -43,6 +43,10 @@ app.get('/post', (req, res)=>{
     return listaPost
 })
 
+app.post("/cadastrar", (req, res)=>{
+    const resultado = req.body
+})
+
 app.get('/health', (req,res)=>{
     res.json({"Server": "OK"})
 })
