@@ -88,30 +88,68 @@
       <div class="modalPost">
         <form class="formModalPost">
           <div class="boxBtnClose">
-            <button type="button" class="btnCloseModal"><i class="fa-solid fa-xmark"></i></button>
+            <button type="button" class="btnCloseModal">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+
+          <div class="boxInputPost containerTagsPost">
+            <h4>Selecione um assunto</h4>
+            <div class="boxAssuntoPost">
+              <div>
+                <input type="radio" name="tag" value="geral" id="tagGeral" />
+                <label for="tagGeral">Geral</label>
+              </div>
+
+              <div>
+                <input
+                  type="radio"
+                  name="tag"
+                  value="programação"
+                  id="tagProgramação"
+                />
+                <label for="tagProgramação">Programação</label>
+              </div>
+
+              <div>
+                <input
+                  type="radio"
+                  name="tag"
+                  value="tecnologia"
+                  id="tagTecnologia"
+                />
+                <label for="tagTecnologia">Tecnologia</label>
+              </div>
+
+              <div>
+                <input type="radio" name="tag" value="jogos" id="tagJogos" />
+                <label for="tagJogos">Jogos</label>
+              </div>
+            </div>
+            <div class="boxTagsPost">
+              <h4>Tags Relacionadas</h4>
+              <select name="" id="">
+                <option value="">Teste</option>
+                <option value="">Teste</option>
+                <option value="">Teste</option>
+              </select>
+            </div>
           </div>
 
           <div class="boxInputPost">
-            <label for="tagProgramação">
-              <input type="radio" name="tag" value="programação" id="tagProgramação">
-            </label>
-            
-            <label for="tagTecnologia">
-              <input type="radio" name="tag" value="tecnologia" id="tagTecnologia">
-            </label>
-            
-            <label for="tagJogos">
-              <input type="radio" name="tag" value="jogos" id="tagJogos">
-            </label>
-            
+            <input
+              type="text"
+              placeholder="Titulo da postagem"
+              class="inputModalPost"
+            />
           </div>
 
           <div class="boxInputPost">
-            <input type="text" placeholder="Titulo da postagem" class="inputModalPost"/>
-          </div>
-
-          <div class="boxInputPost">
-            <textarea type="text" placeholder="Escreva o conteudo" class="textareaModalPost"></textarea>
+            <textarea
+              type="text"
+              placeholder="Escreva o conteudo"
+              class="textareaModalPost"
+            ></textarea>
           </div>
 
           <button type="submit" class="btnCriarPost">Enviar Post</button>
