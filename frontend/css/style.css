@@ -111,22 +111,21 @@ body::-webkit-scrollbar{
 }
 
 .overlayModalPost{
-    opacity: 0;
+    display: none;
     position: absolute;
     top: 50%;
     left: 50%;
     pointer-events: none;
     backdrop-filter: blur(5px);
     z-index: 999;
-    display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .modalPost{
+    opacity: 0;
     background: var(--sideBar);
     width: 40%;
-    display: flex;
     justify-content: center;
     align-items: center;
     margin: auto;
@@ -135,20 +134,25 @@ body::-webkit-scrollbar{
     position: relative;
 }
 
-.overlayModalPost.active{
+.modalPost.active{
     opacity: 1;
+    animation: aparecerModal .5s ease-in-out;
+    display: flex;
+}
+
+.overlayModalPost.active{
+    display: flex;
     width: 100%;
     height: 100vh;
     pointer-events: all;
     transform: translate(-50%, -50%);
-    animation: aparecerModal .5s ease-in-out;
 }
 
 @keyframes aparecerModal {
     0%{
-        transform: translate(-100%,-50%);
+        transform: translate(-100%, 0);
     } 100%{
-        transform: translate(-50%, -50%);
+        transform: translate(0, 0);
     }
 }
 
@@ -388,6 +392,169 @@ body::-webkit-scrollbar{
     list-style: none;
 }
 
+/* Login-Cadastro */
+
+.mainLogin{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 100vh;
+    height: 100vh;
+    width: 90%;
+    margin: auto;
+    gap: 15px;
+}
+
+.boxInfoLogin{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 60%;
+}
+
+.textosInfoLogin{
+    display: flex;
+    justify-content: flex-start;
+    gap: 15px;
+    flex-direction: column;
+    flex: 1;
+}
+
+.tituloInfoLogin{
+    font-size: 3.6rem;
+}
+
+.tituloInfoLogin span{
+    color: var(--roxoPrincipal);
+}
+
+.listaBeneficiosLogin{
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+}
+
+.listaBeneficiosLogin li{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 35%;
+}
+
+.listaBeneficiosLogin li span{
+    font-size: 2.6rem;
+}
+
+.boxLoginRegister{
+    background-image: radial-gradient(ellipse at center, var(--cards) 70%, rgba(139, 92, 246, 0.4) 120%);
+    min-width: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 70%;
+    border-radius: 10%;
+    padding: 10px;
+}
+
+.btnSeletoresLogin{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.btnSelectLogin, .btnSelectCadastro{
+    width: 45%;
+    height: 5vh;
+    border: none;
+    background: none;
+    color: var(--textoPrincipal);
+    border-bottom: 2px solid var(--textoSegundario);
+    cursor: pointer;
+}
+
+.btnSelectLogin.active, .btnSelectCadastro.active{
+    border-bottom: 2px solid var(--roxoPrincipal);
+}
+
+.formLogin, .formCadastro{
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding: 10px;
+}
+
+.formLogin.active, .formCadastro.active{
+    display: flex;
+}
+
+.campoTexto{
+    text-align: center;
+}
+
+.campoCadastro, .campoLogin{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 5px;
+}
+
+.inputLogin{
+    height: 15%;
+    width: 100%;
+    margin: auto;
+    padding: 5px;
+}
+
+.inputLogin input{
+    height: 100%;
+    width: 100%;
+    outline: none;
+    padding: 0px 5px;
+}
+
+.boxBtnLogin, .boxBtnCadastro{
+    display: flex;
+    width: 100%;
+    height: 60%;
+    align-items: flex-end;
+}
+
+.btnLogin, .btnCadastro{
+    width: 100%;
+    height: 25%;
+    display: flex;
+    border: none;
+    border-radius: 5px;
+    align-items: center;
+    justify-content: center;
+    background-image: linear-gradient(to top, var(--roxoPrincipal), var(--roxoHover));
+    box-shadow: 1px 1px 0px 1px var(--roxoHover);
+    color: var(--textoPrincipal);
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: .6s ease-in-out;
+}
+
+.btnLogin:hover, .btnCadastro:hover{
+    background-image: linear-gradient(to top, var(--roxoHover), var(--roxoPrincipal));
+    transform: translateY(5px);
+    box-shadow: none;
+}
+
+.campoDuvidaCadastro button, .campoDuvidaLogin button{
+    background: none;
+    color: var(--roxoPrincipal);
+    cursor: pointer;
+    border: none;
+}
+
+.campoDuvidaCadastro button:hover, .campoDuvidaLogin button:hover{
+    color: var(--roxoHover);
+}
+
 @media (max-width: 768px) {
     .headerNodus{
         justify-content: space-between;
@@ -421,8 +588,20 @@ body::-webkit-scrollbar{
         min-width: 0;
     }
 
+    .overlayModalPost{
+        display: none;
+    }
+
+    .overlayModalPost.active{
+        display: flex;
+    }
+
     .modalPost{
         width: 90%;
+    }
+
+    .boxAssuntoPost{
+        flex-wrap: nowrap;
     }
 
     .boxPost{
@@ -437,5 +616,15 @@ body::-webkit-scrollbar{
 
     .postTags{
         justify-content: flex-start;
+    }
+
+    /* Login */
+
+    .mainLogin{
+        justify-content: center;
+    }
+
+    .boxInfoLogin{
+      display: none;  
     }
 }

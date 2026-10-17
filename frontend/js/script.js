@@ -1,6 +1,7 @@
 const btnOpenModal = document.querySelector('.headerNewPost')
 const btnCloseModal = document.querySelector('.btnCloseModal')
 const modalPost = document.querySelector('.overlayModalPost')
+const boxModalPost = document.querySelector('.modalPost')
 const formPost = document.querySelector('.formModalPost')
 const inputTituloUsuario = document.querySelector('.inputModalPost')
 const inputTextareaUsuario = document.querySelector('.textareaModalPost')
@@ -16,11 +17,17 @@ const postFront = []
 function openModalPost(){
     if(usuario.status){
         modalPost.classList.add('active')
+        boxModalPost.classList.add('active')
     }
 }
 
 function closeModalPost(){
     modalPost.classList.remove('active')
+    boxModalPost.classList.remove('active')
+}
+
+function buscarPost(){
+    
 }
 
 async function criarPost(){

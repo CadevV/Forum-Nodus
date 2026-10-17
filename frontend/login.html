@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nodus | Entrar</title>
+
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Space+Grotesk:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+    
+    <script
+      src="https://kit.fontawesome.com/8bf2916310.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="js/api.js" defer></script>
+    <script src="js/login.js" defer></script>
+  </head>
+  <body>
+    <main class="mainLogin">
+      <div class="boxInfoLogin">
+        <div class="textosInfoLogin">
+          <h1 class="tituloInfoLogin">NO<span>DUS</span></h1>
+          <div>
+            <h3>Seu forum de conversa de confiança</h3>
+            <h4>Encontre todos os assuntos em um lugar só</h4>
+          </div>
+          <p>
+            Conecte-se com pessoas, compartilhe conhecimentos e participe de
+            discussões sobre tecnologia, jogos, programação e muito mais.
+          </p>
+        </div>
+
+        <ul class="listaBeneficiosLogin">
+          <li><span><i class="fa-regular fa-comment-dots"></i></span> </i>Discussões Reais</li>
+          <li><span><i class="fa-solid fa-user-group"></i></span> Diversos Temas</li>
+          <li><span><i class="fa-solid fa-bolt"></i></span> Cresça Junto</li>
+        </ul>
+      </div>
+      <div class="boxLoginRegister">
+        <div class="btnSeletoresLogin">
+          <button class="btnSelectLogin active">Login</button>
+          <button class="btnSelectCadastro">Cadastro</button>
+        </div>
+
+        <form class="formLogin active">
+          <div class="campoTexto">
+            <h2>Bem vindo de Volta!</h2>
+            <p>Insira seus Dados para Logar na sua conta</p>
+          </div>
+
+          <div class="campoLogin">
+            <div class="inputLogin">
+              <label for="inputLoginNome">Insira o Nome</label>
+              <input
+                id="inputLoginNome"
+                type="text"
+                placeholder="digite o nome de usuario"
+                aria-label="digite o nome de usuario"
+              />
+            </div>
+
+            <div class="inputLogin">
+              <label for="inputLoginSenha">Digite a senha</label>
+              <input
+                type="password"
+                placeholder="digite a senha"
+                aria-label="digite a senha"
+                id="inputLoginSenha"
+              />
+            </div>
+
+            <div class="boxBtnLogin">
+              <button class="btnLogin">Logar <i class="fa-solid fa-arrow-right-long"></i></button>
+            </div>
+          </div>
+
+          <div class="campoDuvidaCadastro">
+            ainda não está cadastrado? <button type="button">Clique aqui <i class="fa-solid fa-arrow-right-long"></i></button>
+          </div>
+        </form>
+
+        <form class="formCadastro">
+          <div class="campoTexto">
+            <h2>Bem vindo ao Nodus!</h2>
+            <p>Insira seus Dados para criar uma conta</p>
+          </div>
+
+          <div class="campoCadastro">
+            <div class="inputLogin">
+              <input
+                type="email"
+                placeholder="Digite um email"
+                aria-label="Digite um email"
+              />
+            </div>
+
+            <div class="inputLogin">
+              <input
+                type="text"
+                placeholder="Digite o nome de usuario (Não use nome real)"
+                aria-label="Digite o nome de usuario (Não use nome real)"
+              />
+            </div>
+
+            <div class="inputLogin">
+              <input
+                type="password"
+                placeholder="digite a senha"
+                aria-label="digite a senha"
+              />
+            </div>
+
+            <div class="inputLogin">
+              <input
+                type="password"
+                placeholder="confirme a senha"
+                aria-label="confime a senha"
+              />
+            </div>
+
+            <div class="boxBtnCadastro">
+              <button class="btnCadastro">Cadastrar <i class="fa-solid fa-arrow-right-long"></i></button>
+            </div>
+          </div>
+          <div class="campoDuvidaLogin">
+            ainda não está cadastrado? <button type="button">Clique aqui <i class="fa-solid fa-arrow-right-long"></i></button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </body>
+</html>
