@@ -11,10 +11,6 @@ const inputTituloUsuario = document.querySelector(".inputModalPost");
 const inputTextareaUsuario = document.querySelector(".textareaModalPost");
 const containerPosts = document.querySelector(".containerPosts");
 
-const usuario = {
-  status: false,
-};
-
 const postFront = [];
 
 function openModalPost(modal, boxModal) {
@@ -145,7 +141,6 @@ async function recuperarPost() {
 }
 
 btnOpenModal.addEventListener("click", () => {
-  if(!usuario.status) return
   openModalPost(modalPost, boxModalPost);
 });
 

@@ -350,8 +350,9 @@ body::-webkit-scrollbar{
 .selecionarFiltro{
     outline: none;
     color: var(--sideBar);
-    background: var(--textoSegundario);
+    background: var(--roxoHover);
     border: none;
+    border-radius: 5px;
 }
 
 .containerPosts{

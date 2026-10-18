@@ -1,6 +1,6 @@
 import express from "express";
 import cors from 'cors';
-import { z } from 'zod';
+import { string, z, ZodObject } from 'zod';
 
 const app = express()
 const port = 3000
@@ -9,13 +9,33 @@ app.use(express.json())
 app.use(cors())
 
 const listaPost = []
+const listaUsuarios = [
+    {
+        id: 0,
+        email: "adm@adm.com",
+        name: "admin",
+        pass: "adm123"
+    }
+]
 
-let id = 0
+let idPost = 0
+let idUser = 1
 
 const postValidado = z.object({
-    tags: z.string().lowercase(),
+    tags: z.string().toLowerCase(),
     titulo: z.string().min(3).max(20),
     conteudo: z.string().min(5).max(200)
+})
+
+const userValid = z.object({
+    email: z.string().email(),
+    name: z.union([z.string().min(2).max(10), z.number().max(10)]),
+    pass: z.union([z.string(), z.number()])
+})
+
+const userValidLogin = z.object({
+    name: z.union([z.string().min(2).max(10), z.number().max(10)]),
+    pass: z.union([z.string(), z.number()])
 })
 
 app.post('/post', (req, res)=>{
@@ -28,7 +48,7 @@ app.post('/post', (req, res)=>{
     const dados = resultado.data
 
     const novoPost = {
-        id:id++,
+        id:idPost++,
         ...dados
     }
 
@@ -44,9 +64,46 @@ app.get('/post', (req, res)=>{
 })
 
 app.post("/cadastrar", (req, res)=>{
-    const resultado = req.body
+    const resultado = userValid.safeParse(req.body);
+    if(!resultado.success){
+        return res.status(400).json({erros: resultado.error.issues})
+    }
 
-    res.json(resultado)
+    const verify = listaUsuarios.find(el => el.email == resultado.data.email || el.name == resultado.data.name)
+
+    if(verify) return res.status(400).json("o email " + resultado.data.email + "ou"+ resultado.data.name + " Já está sendo usado")
+
+    const newUser ={
+        id: idUser++,
+        ...resultado.data,
+        logado: false
+    }
+    
+    listaUsuarios.push(newUser)
+
+    return res.json(listaUsuarios[newUser.id])
+})
+
+app.get("/cadastrar", (req, res)=>{
+    res.json(listaUsuarios)
+})
+
+app.post('/login', (req, res) =>{
+    const resultado = userValidLogin.safeParse(req.body);
+
+    if(!resultado.success){
+        return res.status(400).json({erros: resultado.error.issues})
+    }
+
+    const findUser = listaUsuarios.find(el => el.name == resultado.data.name && el.pass == resultado.data.pass)
+
+    if(!findUser){
+        return res.status(404).json("Usuario não encontrado ")
+    }
+
+    findUser.logado = true
+
+    res.status(200).json('logado')
 })
 
 app.get('/health', (req,res)=>{

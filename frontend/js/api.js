@@ -38,4 +38,54 @@ async function recuperarPostApi() {
     return dados
 }
 
+async function cadastrarContaApi(emailUser, nameUser, passUser) {
+    const user = {
+        email: emailUser,
+        name: nameUser,
+        pass: passUser
+    }
+    const resposta = await fetch("http://localhost:3000/cadastrar", {
+        method: "POST",
+
+        headers: {
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify(user)
+    })
+
+    if(!resposta.ok){
+        throw new Error("Falha ao Cadastrar")
+    }
+
+    const dados = await resposta.json()
+
+    return dados
+}
+
+async function loginContaApi(nameUser, passUser) {
+    const user = {
+        name: nameUser,
+        pass: passUser
+    }
+
+    const resposta = await fetch("http://localhost:3000/login",{
+        method: "POST",
+
+        headers:{
+            "Content-Type": "application/json"
+        },
+
+        body:JSON.stringify(user)
+    })
+
+    if(!resposta.ok) {
+        throw new Error("Usuario não encontrado")
+    }
+
+    const dados = await resposta.json()
+
+    return dados
+}
+
 health()

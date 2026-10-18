@@ -2,6 +2,12 @@ const btnSelectLogin = document.querySelector('.btnSelectLogin')
 const btnSelectCadastro = document.querySelector('.btnSelectCadastro')
 const formLogin = document.querySelector('.formLogin')
 const formCadastro = document.querySelector('.formCadastro')
+const inputEmailCadastro = document.getElementById('emailCadastro')
+const inputNameCadastro = document.getElementById('nameCadastro')
+const inputpassCadastro = document.getElementById('passCadastro')
+const inputpassConfirmCadastro = document.getElementById('passCadastroConfirm')
+const inputNameLogin = document.getElementById('inputLoginNome')
+const inputPassLogin = document.getElementById('inputLoginSenha')
 
 function trocarMenuLogin(){
     if(!btnSelectLogin.classList.contains('active')){
@@ -21,5 +27,38 @@ function trocarMenuLogin(){
     }
 }
 
+async function cadastrarConta(){
+    const valorEmail = inputEmailCadastro.value 
+    const valorName = inputNameCadastro.value
+    const valorPass = inputpassCadastro.value
+    const valorPassConfirm = inputpassConfirmCadastro.value
+
+    if(valorEmail == "" || valorName == "" || valorPass == "" || valorPassConfirm == "") return
+    if(!valorPass === valorPassConfirm) return
+
+    cadastrarContaApi(valorEmail, valorName, valorPass)
+}
+
+async function loginConta(){
+    const valorName = inputNameLogin.value
+    const valorPass = inputPassLogin.value
+
+    if(valorName == "" || valorPass == "") {
+        console.log("erro")
+        return
+    }
+
+    loginContaApi(valorName, valorPass)
+}
+
 btnSelectLogin.addEventListener('click', trocarMenuLogin)
 btnSelectCadastro.addEventListener('click', trocarMenuLogin)
+formCadastro.addEventListener('submit', (event)=>{
+    event.preventDefault()
+    cadastrarConta()
+})
+
+formLogin.addEventListener('submit', (event)=>{
+    event.preventDefault()
+    loginConta()
+})
