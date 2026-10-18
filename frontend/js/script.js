@@ -12,7 +12,7 @@ const inputTextareaUsuario = document.querySelector(".textareaModalPost");
 const containerPosts = document.querySelector(".containerPosts");
 
 const usuario = {
-  status: true,
+  status: false,
 };
 
 const postFront = [];
@@ -99,7 +99,7 @@ async function criarPost() {
   containerPosts.appendChild(elementNewPost);
 
   console.log(resultado);
-  closeModalPost();
+  closeModalPost(modalPost, boxModalPost);
 }
 
 async function recuperarPost() {
@@ -120,23 +120,32 @@ async function recuperarPost() {
 
                 <div class="postTags">
                     <ul class="listTags">
-                        <li class="tag">${postFront[i].tags}</li>
+                        <li class="tag"></li>
                     </ul>
                 </div>
             </div>
 
             <div class="infoPost">
-                <h2 class="titlePost">${postFront[i].titulo}</h2>
+                <h2 class="titlePost"></h2>
                 <p class="contPost">
-                    ${postFront[i].conteudo}
+                    
                 </p>
             </div>
         `;
+    const tag = elementNewPost.querySelector(".tag");
+    const titulo = elementNewPost.querySelector(".titlePost");
+    const conteudo = elementNewPost.querySelector(".contPost");
+
+    tag.textContent = postFront[i].tags
+    titulo.textContent = postFront[i].titulo
+    conteudo.textContent = postFront[i].conteudo
+
     containerPosts.appendChild(elementNewPost);
   }
 }
 
 btnOpenModal.addEventListener("click", () => {
+  if(!usuario.status) return
   openModalPost(modalPost, boxModalPost);
 });
 

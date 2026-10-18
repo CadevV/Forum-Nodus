@@ -347,6 +347,13 @@ body::-webkit-scrollbar{
     padding: 15px;
 }
 
+.selecionarFiltro{
+    outline: none;
+    color: var(--sideBar);
+    background: var(--textoSegundario);
+    border: none;
+}
+
 .containerPosts{
     width: 95%;
     max-height: 100vh;
@@ -438,6 +445,21 @@ body::-webkit-scrollbar{
 }
 
 /* Login-Cadastro */
+.btnBackLogin{
+    position: absolute;
+    margin: 5px;
+    padding: 5px;
+    border: 1px solid var(--bordas);
+    border-radius: 50%;
+}
+
+.btnBackLogin a{
+    color: var(--textoPrincipal);
+}
+
+.btnBackLogin a:hover{
+    color: var(--roxoPrincipal);
+}
 
 .mainLogin{
     display: flex;
@@ -524,7 +546,7 @@ body::-webkit-scrollbar{
 .formLogin, .formCadastro{
     display: none;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around;
     height: 100%;
     padding: 10px;
 }
@@ -557,7 +579,9 @@ body::-webkit-scrollbar{
     height: 100%;
     width: 100%;
     outline: none;
+    border: none;
     padding: 0px 5px;
+    border-radius: 10px;
 }
 
 .boxBtnLogin, .boxBtnCadastro{

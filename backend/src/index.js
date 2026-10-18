@@ -45,6 +45,8 @@ app.get('/post', (req, res)=>{
 
 app.post("/cadastrar", (req, res)=>{
     const resultado = req.body
+
+    res.json(resultado)
 })
 
 app.get('/health', (req,res)=>{
