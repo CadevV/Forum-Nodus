@@ -10,8 +10,12 @@ const formPost = document.querySelector(".formModalPost");
 const inputTituloUsuario = document.querySelector(".inputModalPost");
 const inputTextareaUsuario = document.querySelector(".textareaModalPost");
 const containerPosts = document.querySelector(".containerPosts");
+const optionCadastroModal = document.querySelector('.optionCadastro')
+const optionPerfilModal = document.querySelector('.optionPerfil')
 
 const postFront = [];
+const userUsuario = localStorage.getItem('user')
+const userObject = JSON.parse(userUsuario)
 
 function openModalPost(modal, boxModal) {
   modal.classList.add("active");
@@ -21,6 +25,16 @@ function openModalPost(modal, boxModal) {
 function closeModalPost(modal, boxModal) {
   modal.classList.remove("active");
   boxModal.classList.remove("active");
+}
+
+function logicaCadastroPerfil(){
+  if(userObject.logado){
+    optionPerfilModal.classList.add('active')
+    optionCadastroModal.classList.remove('active')
+  } else {
+    optionCadastroModal.classList.add('active')
+    optionPerfilModal.classList.remove('active')
+  }
 }
 
 function buscarPost() {
@@ -38,6 +52,11 @@ function buscarPost() {
 }
 
 async function criarPost() {
+  if(!userObject.logado){
+    console.log("usuario não logado")
+    return
+  }
+
   const assuntoSelecionado = document.querySelector("input[name=tag]:checked");
 
   if (!assuntoSelecionado) return;
@@ -49,6 +68,7 @@ async function criarPost() {
   if (!valorAssunto || !valorTitulo || !valorConteudo) return;
 
   const newPost = {
+    user: userObject.name,
     tags: valorAssunto,
     titulo: valorTitulo,
     conteudo: valorConteudo,
@@ -61,7 +81,7 @@ async function criarPost() {
         <div class="postCima">
             <div class="userPublicPost">
                 <div class="logoUserPost"></div>
-                <h4>Epaminondas</h4>
+                <h4 class="usuarioPost">Epaminondas</h4>
             </div>
 
             <div class="postTags">
@@ -78,15 +98,18 @@ async function criarPost() {
             </p>
         </div>
     `;
+  const usuarioPost = elementNewPost.querySelector('.usuarioPost')
   const tag = elementNewPost.querySelector(".tag");
   const titulo = elementNewPost.querySelector(".titlePost");
   const conteudo = elementNewPost.querySelector(".contPost");
 
+  usuarioPost.textContent = userObject.name
   tag.textContent = valorAssunto;
   titulo.textContent = valorTitulo.trim();
   conteudo.textContent = valorConteudo.trim();
 
   const resultado = await criarPostApi(
+    newPost.user,
     newPost.tags,
     newPost.titulo,
     newPost.conteudo,
@@ -111,7 +134,7 @@ async function recuperarPost() {
             <div class="postCima">
                 <div class="userPublicPost">
                     <div class="logoUserPost"></div>
-                    <h4>Epaminondas</h4>
+                    <h4 class="usuarioPost"></h4>
                 </div>
 
                 <div class="postTags">
@@ -128,10 +151,12 @@ async function recuperarPost() {
                 </p>
             </div>
         `;
+    const usuario = elementNewPost.querySelector('.usuarioPost')
     const tag = elementNewPost.querySelector(".tag");
     const titulo = elementNewPost.querySelector(".titlePost");
     const conteudo = elementNewPost.querySelector(".contPost");
 
+    usuario.textContent = postFront[i].user
     tag.textContent = postFront[i].tags
     titulo.textContent = postFront[i].titulo
     conteudo.textContent = postFront[i].conteudo
@@ -157,6 +182,7 @@ btnCloseModal.forEach((element) => {
 });
 
 btnOpenLogin.addEventListener("click", () => {
+  logicaCadastroPerfil()
   openModalPost(modalLogin, boxModalLogin);
 });
 

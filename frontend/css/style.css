@@ -163,16 +163,21 @@ body::-webkit-scrollbar{
 .boxOptionLogin{
     flex: 1;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: flex-end;
     padding: 15px;
 }
 
 .optionLogin{
+    display: none;
     width: 45%;
     font-size: 0.9rem;
     text-align: center;
     padding: 5px;
+}
+
+.optionLogin.active{
+    display: block;
 }
 
 .boxLinkOption{

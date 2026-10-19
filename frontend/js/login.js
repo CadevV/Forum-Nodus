@@ -62,3 +62,5 @@ formLogin.addEventListener('submit', (event)=>{
     event.preventDefault()
     loginConta()
 })
+
+vericarLogado()

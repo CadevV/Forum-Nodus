@@ -22,6 +22,7 @@ let idPost = 0
 let idUser = 1
 
 const postValidado = z.object({
+    user: z.string(),
     tags: z.string().toLowerCase(),
     titulo: z.string().min(3).max(20),
     conteudo: z.string().min(5).max(200)
@@ -103,7 +104,7 @@ app.post('/login', (req, res) =>{
 
     findUser.logado = true
 
-    res.status(200).json('logado')
+    res.status(200).json(findUser)
 })
 
 app.get('/health', (req,res)=>{

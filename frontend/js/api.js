@@ -6,8 +6,9 @@ async function health(){
     console.log(dados)
 }
 
-async function criarPostApi(tags, titulo, conteudo) {
+async function criarPostApi(usuario,tags, titulo, conteudo) {
     const post = {
+        "user": usuario,
         "tags": tags,
         "titulo": titulo,
         "conteudo": conteudo
@@ -84,6 +85,10 @@ async function loginContaApi(nameUser, passUser) {
     }
 
     const dados = await resposta.json()
+
+    const userText = JSON.stringify(dados)
+
+    localStorage.setItem('user', userText)
 
     return dados
 }
