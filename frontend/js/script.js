@@ -28,12 +28,14 @@ function closeModalPost(modal, boxModal) {
 }
 
 function logicaCadastroPerfil(){
+  if(!userObject){
+    optionCadastroModal.classList.add('active')
+    optionPerfilModal.classList.remove('active')
+    return
+  }
   if(userObject.logado){
     optionPerfilModal.classList.add('active')
     optionCadastroModal.classList.remove('active')
-  } else {
-    optionCadastroModal.classList.add('active')
-    optionPerfilModal.classList.remove('active')
   }
 }
 
@@ -52,7 +54,7 @@ function buscarPost() {
 }
 
 async function criarPost() {
-  if(!userObject.logado){
+  if(!userObject.logado || !userObject){
     console.log("usuario não logado")
     return
   }
