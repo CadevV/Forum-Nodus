@@ -27,18 +27,6 @@ function trocarMenuLogin(){
     }
 }
 
-async function cadastrarConta(){
-    const valorEmail = inputEmailCadastro.value 
-    const valorName = inputNameCadastro.value
-    const valorPass = inputpassCadastro.value
-    const valorPassConfirm = inputpassConfirmCadastro.value
-
-    if(valorEmail == "" || valorName == "" || valorPass == "" || valorPassConfirm == "") return
-    if(!valorPass === valorPassConfirm) return
-
-    cadastrarContaApi(valorEmail, valorName, valorPass)
-}
-
 async function loginConta(){
     const valorName = inputNameLogin.value
     const valorPass = inputPassLogin.value
@@ -48,7 +36,23 @@ async function loginConta(){
         return
     }
 
-    loginContaApi(valorName, valorPass)
+    const login = await loginContaApi(valorName, valorPass)
+
+    window.location.href = 'http://127.0.0.1:5500/frontend/index.html'
+}
+
+async function cadastrarConta(){
+    const valorEmail = inputEmailCadastro.value 
+    const valorName = inputNameCadastro.value
+    const valorPass = inputpassCadastro.value
+    const valorPassConfirm = inputpassConfirmCadastro.value
+
+    if(valorEmail == "" || valorName == "" || valorPass == "" || valorPassConfirm == "") return
+    if(valorPass !== valorPassConfirm) return
+
+    const cadastro = await cadastrarContaApi(valorEmail, valorName, valorPass)
+
+    window.location.href = 'http://127.0.0.1:5500/frontend/index.html'
 }
 
 btnSelectLogin.addEventListener('click', trocarMenuLogin)
@@ -62,5 +66,3 @@ formLogin.addEventListener('submit', (event)=>{
     event.preventDefault()
     loginConta()
 })
-
-vericarLogado()

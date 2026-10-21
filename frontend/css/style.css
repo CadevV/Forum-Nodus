@@ -170,6 +170,7 @@ body::-webkit-scrollbar{
 
 .optionLogin{
     display: none;
+    min-width: 45%;
     width: 45%;
     font-size: 0.9rem;
     text-align: center;
@@ -190,9 +191,18 @@ body::-webkit-scrollbar{
     color: var(--textoPrincipal);
 }
 
-.boxLinkOption a{
+.boxLinkOption a, .boxLinkOption button{
+    background: none;
+    border: none;
     color: var(--textoPrincipal);
     font-size: 4rem;
+    cursor: pointer;
+    transition: 0.5s ease-in-out;
+}
+
+.boxLinkOption button:hover{
+    color: var(--erro);
+    transform: translateX(10px);
 }
 
 .formModalPost{

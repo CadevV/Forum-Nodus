@@ -10,8 +10,9 @@ const formPost = document.querySelector(".formModalPost");
 const inputTituloUsuario = document.querySelector(".inputModalPost");
 const inputTextareaUsuario = document.querySelector(".textareaModalPost");
 const containerPosts = document.querySelector(".containerPosts");
-const optionCadastroModal = document.querySelector('.optionCadastro')
-const optionPerfilModal = document.querySelector('.optionPerfil')
+const optionCadastroModal = document.querySelectorAll('.optionCadastro')
+const optionPerfilModal = document.querySelectorAll('.optionPerfil')
+const btnDeslogar = document.getElementById('btnDeslogar')
 
 const postFront = [];
 const userUsuario = localStorage.getItem('user')
@@ -28,14 +29,23 @@ function closeModalPost(modal, boxModal) {
 }
 
 function logicaCadastroPerfil(){
-  if(!userObject){
-    optionCadastroModal.classList.add('active')
-    optionPerfilModal.classList.remove('active')
+  if(!userObject || !userObject.logado){
+    optionCadastroModal.forEach(el => {
+      el.classList.add('active')
+    })
+
+    optionPerfilModal.forEach(el => {
+      el.classList.remove('active')
+    });
     return
-  }
-  if(userObject.logado){
-    optionPerfilModal.classList.add('active')
-    optionCadastroModal.classList.remove('active')
+  } else if(userObject.logado){
+    optionCadastroModal.forEach(el => {
+      el.classList.remove('active')
+    })
+
+    optionPerfilModal.forEach(el => {
+      el.classList.add('active')
+    });
   }
 }
 
@@ -47,14 +57,14 @@ function buscarPost() {
     const titulo = post.querySelector(".titlePost").textContent.toLowerCase();
     if (titulo.includes(valorSearch)) {
       post.classList.remove("off");
-      return;
+      return
     }
     post.classList.add("off");
   });
 }
 
 async function criarPost() {
-  if(!userObject.logado || !userObject){
+  if(!userObject ||!userObject.logado){
     console.log("usuario não logado")
     return
   }
@@ -167,6 +177,15 @@ async function recuperarPost() {
   }
 }
 
+function deslogarConta(){
+    const user = localStorage.getItem("user")
+    const userObj = JSON.parse(user)
+
+    userObj.logado = false
+
+    localStorage.clear()
+}
+
 btnOpenModal.addEventListener("click", () => {
   openModalPost(modalPost, boxModalPost);
 });
@@ -193,5 +212,10 @@ formPost.addEventListener("submit", (event) => {
   event.preventDefault();
   criarPost();
 });
+
+btnDeslogar.addEventListener('click', ()=>{
+  deslogarConta()
+  closeModalPost(modalLogin, boxModalLogin)
+})
 
 recuperarPost();
