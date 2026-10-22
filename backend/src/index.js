@@ -77,7 +77,7 @@ app.post("/cadastrar", (req, res)=>{
     const newUser ={
         id: idUser++,
         ...resultado.data,
-        logado: false
+        logado: true
     }
     
     listaUsuarios.push(newUser)
@@ -86,6 +86,9 @@ app.post("/cadastrar", (req, res)=>{
 })
 
 app.get("/cadastrar", (req, res)=>{
+    listaUsuarios.forEach(element => {
+        delete element.pass
+    });
     res.json(listaUsuarios)
 })
 
@@ -101,8 +104,6 @@ app.post('/login', (req, res) =>{
     if(!findUser){
         return res.status(404).json("Usuario não encontrado ")
     }
-
-    findUser.logado = true
 
     res.status(200).json(findUser)
 })

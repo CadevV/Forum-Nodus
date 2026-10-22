@@ -61,6 +61,12 @@ async function cadastrarContaApi(emailUser, nameUser, passUser) {
 
     const dados = await resposta.json()
 
+    delete dados.pass
+
+    const userText = JSON.stringify(dados)
+
+    localStorage.setItem('user', userText)
+
     return dados
 }
 

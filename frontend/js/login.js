@@ -9,6 +9,15 @@ const inputpassConfirmCadastro = document.getElementById('passCadastroConfirm')
 const inputNameLogin = document.getElementById('inputLoginNome')
 const inputPassLogin = document.getElementById('inputLoginSenha')
 
+function verificarLogado(){
+    const user = localStorage.getItem('user')
+    const userValid = JSON.parse(user)
+
+    if(!userValid.logado) return
+
+    window.location.href = "./../frontend/index.html"
+}
+
 function trocarMenuLogin(){
     if(!btnSelectLogin.classList.contains('active')){
         btnSelectLogin.classList.add('active')
@@ -38,7 +47,7 @@ async function loginConta(){
 
     const login = await loginContaApi(valorName, valorPass)
 
-    window.location.href = 'http://127.0.0.1:5500/frontend/index.html'
+    window.location.href = './../frontend/index.html'
 }
 
 async function cadastrarConta(){
@@ -52,7 +61,7 @@ async function cadastrarConta(){
 
     const cadastro = await cadastrarContaApi(valorEmail, valorName, valorPass)
 
-    window.location.href = 'http://127.0.0.1:5500/frontend/index.html'
+    window.location.href = './../frontend/index.html'
 }
 
 btnSelectLogin.addEventListener('click', trocarMenuLogin)
@@ -66,3 +75,5 @@ formLogin.addEventListener('submit', (event)=>{
     event.preventDefault()
     loginConta()
 })
+
+verificarLogado()

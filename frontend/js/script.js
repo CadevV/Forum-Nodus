@@ -178,10 +178,7 @@ async function recuperarPost() {
 }
 
 function deslogarConta(){
-    const user = localStorage.getItem("user")
-    const userObj = JSON.parse(user)
-
-    userObj.logado = false
+    userObject.logado = false
 
     localStorage.clear()
 }
