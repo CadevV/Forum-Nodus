@@ -629,6 +629,30 @@ body::-webkit-scrollbar{
     box-shadow: none;
 }
 
+/* PERFIL */
+
+.headerPerfil{
+    display: flex;
+    margin: auto;
+    width: 100%;
+    min-height: 25vh;
+    padding: 5px;
+}
+
+.imgPerfil{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--bordas);
+    border-radius: 50%;
+    width: 150px;
+    min-height: 50px;
+    padding: 5px;
+    font-size: 4rem;
+    color: var(--erro);
+    background: var(--textoSegundario);
+}
+
 @media (max-width: 768px) {
     .headerNodus{
         justify-content: space-between;
@@ -642,15 +666,24 @@ body::-webkit-scrollbar{
         display: none;
     }
 
+    .btnOption.active{
+        display: none;
+    }
+
+    .headerSearchMobile.active{
+        display: flex;
+        position: absolute;
+        right: 5px;
+        top: 30px;
+    }
+
     .searchPost.active {
         display: flex;
     }
 
-    .searchPost.active:has(.btnOption) {
+    .searchPost.active button{
         display: none;
     }
-
-
 
     .headerBtns{
         display: flex;

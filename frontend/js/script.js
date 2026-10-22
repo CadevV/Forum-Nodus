@@ -1,5 +1,6 @@
 const inputSearch = document.querySelector(".inputSearchPost");
-const searchPost =  document.querySelector('.searchPost')
+const searchMobile = document.querySelector(".searchPost")
+const btnsOptionsHeader =  document.querySelectorAll('.btnOption')
 const btnSearchPostMobile = document.querySelector(".headerSearchMobile")
 const btnOpenModal = document.querySelector(".headerNewPost");
 const btnOpenLogin = document.querySelector(".headerAcont");
@@ -21,7 +22,10 @@ const userUsuario = localStorage.getItem('user')
 const userObject = JSON.parse(userUsuario)
 
 function openSearchMobile(){
-  searchPost.classList.toggle('active')
+  btnsOptionsHeader.forEach(element => {
+    element.classList.toggle('active')
+  });
+  searchMobile.classList.toggle('active')
 }
 
 function openModalPost(modal, boxModal) {

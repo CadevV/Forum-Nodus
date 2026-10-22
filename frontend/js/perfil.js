@@ -1,10 +1,21 @@
+const user = localStorage.getItem('user')
+const userValid = JSON.parse(user) 
+
+
 function verificarLogado(){
-    const user = localStorage.getItem('user')
-    const userValid = JSON.parse(user)
+    const userVeri = localStorage.getItem('user')
+    const userValidVeri = JSON.parse(userVeri) 
+    if(!userValidVeri || !userValidVeri.logado) {
+        window.location.href = "./../frontend/index.html"
+        return
+    }
+}
 
-    if(!userValid || !userValid.logado) return
+function montarPerfil(){
+    const nomePerfil = userValid.name
 
-    window.location.href = "./../frontend/index.html"
+    document.title = `Nodus | ${nomePerfil}`
 }
 
 verificarLogado()
+montarPerfil()
