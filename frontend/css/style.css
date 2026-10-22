@@ -638,9 +638,19 @@ body::-webkit-scrollbar{
         display: block;
     }
 
-    .searchPost{
+    .searchPost {
         display: none;
     }
+
+    .searchPost.active {
+        display: flex;
+    }
+
+    .searchPost.active:has(.btnOption) {
+        display: none;
+    }
+
+
 
     .headerBtns{
         display: flex;

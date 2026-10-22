@@ -1,4 +1,6 @@
 const inputSearch = document.querySelector(".inputSearchPost");
+const searchPost =  document.querySelector('.searchPost')
+const btnSearchPostMobile = document.querySelector(".headerSearchMobile")
 const btnOpenModal = document.querySelector(".headerNewPost");
 const btnOpenLogin = document.querySelector(".headerAcont");
 const btnCloseModal = document.querySelectorAll(".btnCloseModal");
@@ -17,6 +19,10 @@ const btnDeslogar = document.getElementById('btnDeslogar')
 const postFront = [];
 const userUsuario = localStorage.getItem('user')
 const userObject = JSON.parse(userUsuario)
+
+function openSearchMobile(){
+  searchPost.classList.toggle('active')
+}
 
 function openModalPost(modal, boxModal) {
   modal.classList.add("active");
@@ -66,6 +72,7 @@ function buscarPost() {
 async function criarPost() {
   if(!userObject ||!userObject.logado){
     console.log("usuario não logado")
+    window.location.href = './../frontend/login.html'
     return
   }
 
@@ -182,6 +189,8 @@ function deslogarConta(){
 
     localStorage.clear()
 }
+
+btnSearchPostMobile.addEventListener('click', openSearchMobile)
 
 btnOpenModal.addEventListener("click", () => {
   openModalPost(modalPost, boxModalPost);

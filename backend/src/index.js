@@ -86,10 +86,11 @@ app.post("/cadastrar", (req, res)=>{
 })
 
 app.get("/cadastrar", (req, res)=>{
-    listaUsuarios.forEach(element => {
+    const listaGet = structuredClone(listaUsuarios)
+    listaGet.forEach(element => {
         delete element.pass
     });
-    res.json(listaUsuarios)
+    res.json(listaGet)
 })
 
 app.post('/login', (req, res) =>{
@@ -104,6 +105,8 @@ app.post('/login', (req, res) =>{
     if(!findUser){
         return res.status(404).json("Usuario não encontrado ")
     }
+
+    findUser.logado = true
 
     res.status(200).json(findUser)
 })
