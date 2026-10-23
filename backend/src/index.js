@@ -82,7 +82,11 @@ app.post("/cadastrar", (req, res)=>{
     
     listaUsuarios.push(newUser)
 
-    return res.json(listaUsuarios[newUser.id])
+    const postResposta = listaUsuarios[newUser.id]
+
+    delete postResposta.pass
+
+    return res.json(postResposta)
 })
 
 app.get("/cadastrar", (req, res)=>{
@@ -107,6 +111,8 @@ app.post('/login', (req, res) =>{
     }
 
     findUser.logado = true
+
+    delete findUser.pass
 
     res.status(200).json(findUser)
 })

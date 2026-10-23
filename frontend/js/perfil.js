@@ -72,6 +72,6 @@ async function montarPerfil() {
 
 verificarLogado();
 
-if(userValid){
+if(userValid || userValid.logado){
     montarPerfil();
 }
