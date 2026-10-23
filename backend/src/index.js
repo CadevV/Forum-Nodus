@@ -2,7 +2,6 @@ import 'dotenv/config';
 import express from "express";
 import cors from 'cors';
 import { string, z, ZodObject } from 'zod';
-import bcrypt from 'bcryptjs';
 
 const app = express()
 const port = process.env.PORT || 3000
