@@ -1,9 +1,10 @@
+import 'dotenv/config';
 import express from "express";
 import cors from 'cors';
 import { string, z, ZodObject } from 'zod';
 
 const app = express()
-const port = 3000
+const port = process.env.PORT || 3000
 
 app.use(express.json())
 app.use(cors())
@@ -86,7 +87,7 @@ app.post("/cadastrar", (req, res)=>{
 
     delete postResposta.pass
 
-    console.log(`Usuario Criado ${listaUsuarios[newUser.id]}`)
+    console.log(`Usuario Criado ${listaUsuarios[newUser.id].name.toUpperCase()}`)
     return res.json(postResposta)
 })
 
