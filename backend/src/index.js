@@ -82,10 +82,11 @@ app.post("/cadastrar", (req, res)=>{
     
     listaUsuarios.push(newUser)
 
-    const postResposta = listaUsuarios[newUser.id]
+    const postResposta = {...listaUsuarios[newUser.id]}
 
     delete postResposta.pass
 
+    console.log(`Usuario Criado ${listaUsuarios[newUser.id]}`)
     return res.json(postResposta)
 })
 
@@ -112,9 +113,11 @@ app.post('/login', (req, res) =>{
 
     findUser.logado = true
 
-    delete findUser.pass
+    const postReposta = {...findUser}
 
-    res.status(200).json(findUser)
+    delete postReposta.pass
+
+    res.status(200).json(postReposta)
 })
 
 app.get('/health', (req,res)=>{
