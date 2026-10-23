@@ -8,6 +8,8 @@ const inputpassCadastro = document.getElementById('passCadastro')
 const inputpassConfirmCadastro = document.getElementById('passCadastroConfirm')
 const inputNameLogin = document.getElementById('inputLoginNome')
 const inputPassLogin = document.getElementById('inputLoginSenha')
+const feedbackLogin = document.querySelector('.feedbackLogin')
+const feedbackCadastro = document.querySelector('.feedbackCadastro')
 
 function verificarLogado(){
     const user = localStorage.getItem('user')
@@ -39,13 +41,33 @@ function trocarMenuLogin(){
 async function loginConta(){
     const valorName = inputNameLogin.value
     const valorPass = inputPassLogin.value
+    const h5Feedback = feedbackLogin.querySelector('h5')
 
     if(valorName == "" || valorPass == "") {
-        console.log("erro")
+        console.log("erro Preencha os Campos")
+        feedbackLogin.classList.add('branco')
+        h5Feedback.textContent = "Preencha os campos"
+
+        setTimeout(() => {
+            feedbackLogin.classList.remove('branco')
+        },3000)
+
         return
     }
 
     const login = await loginContaApi(valorName, valorPass)
+
+    if(!login){
+        console.log("erro na autenticação")
+        feedbackLogin.classList.add('erro')
+        h5Feedback.textContent = "Senha ou Nome do usuario incorretos"
+
+        setTimeout(() => {
+            feedbackLogin.classList.remove('erro')
+        },3000)
+
+        return        
+    }
 
     window.location.href = './../frontend/index.html'
 }
@@ -55,11 +77,44 @@ async function cadastrarConta(){
     const valorName = inputNameCadastro.value
     const valorPass = inputpassCadastro.value
     const valorPassConfirm = inputpassConfirmCadastro.value
+    const h5Feedback = feedbackCadastro.querySelector('h5')
 
-    if(valorEmail == "" || valorName == "" || valorPass == "" || valorPassConfirm == "") return
-    if(valorPass !== valorPassConfirm) return
+    if(valorEmail == "" || valorName == "" || valorPass == "" || valorPassConfirm == ""){
+        console.log("erro Preencha os Campos")
+        feedbackCadastro.classList.add('branco')
+        h5Feedback.textContent = "Preencha os campos"
+
+        setTimeout(() => {
+            feedbackCadastro.classList.remove('branco')
+        },3000)
+
+        return
+    }
+    if(valorPass !== valorPassConfirm) {
+        console.log("Senhas diferentes")
+        feedbackCadastro.classList.add('erro')
+        h5Feedback.textContent = "As senhas não correspondem"
+
+        setTimeout(() => {
+            feedbackCadastro.classList.remove('erro')
+        },3000)
+
+        return   
+    }
 
     const cadastro = await cadastrarContaApi(valorEmail, valorName, valorPass)
+
+    if(!cadastro){
+        console.log("erro na autenticação")
+        feedbackCadastro.classList.add('erro')
+        h5Feedback.textContent = "Algum Campo Invalido ou Usuario já Cadastrado"
+
+        setTimeout(() => {
+            feedbackCadastro.classList.remove('erro')
+        },3000)
+
+        return        
+    }
 
     window.location.href = './../frontend/index.html'
 }

@@ -581,14 +581,14 @@ body::-webkit-scrollbar{
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    padding: 5px;
+    padding: 0px;
 }
 
 .inputLogin{
-    height: 15%;
+    height: 25%;
     width: 100%;
     margin: auto;
-    padding: 5px;
+    padding: 10px;
 }
 
 .inputLogin input{
@@ -627,6 +627,25 @@ body::-webkit-scrollbar{
     background-image: linear-gradient(to top, var(--roxoHover), var(--roxoPrincipal));
     transform: translateY(5px);
     box-shadow: none;
+}
+
+.feedbackLogin, .feedbackCadastro{
+    opacity: 0;
+    font-size: 0.8rem;
+    text-align: center;
+    max-height: 10px;
+    padding: 5px;
+    margin: auto;
+}
+
+.feedbackLogin.erro, .feedbackCadastro.erro{
+    opacity: 1;
+    color: var(--erro);
+}
+
+.feedbackLogin.branco, .feedbackCadastro.branco{
+    opacity: 1;
+    color: var(--textoSegundario);
 }
 
 /* PERFIL */

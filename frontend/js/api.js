@@ -56,7 +56,8 @@ async function cadastrarContaApi(emailUser, nameUser, passUser) {
     })
 
     if(!resposta.ok){
-        throw new Error("Falha ao Cadastrar")
+        console.log("Falha no Cadastro")
+        return false
     }
 
     const dados = await resposta.json()
@@ -87,7 +88,8 @@ async function loginContaApi(nameUser, passUser) {
     })
 
     if(!resposta.ok) {
-        throw new Error("Usuario não encontrado")
+        console.log('erro no Login')
+        return false
     }
 
     const dados = await resposta.json()
