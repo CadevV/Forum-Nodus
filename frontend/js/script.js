@@ -191,7 +191,7 @@ async function recuperarPost() {
 function deslogarConta(){
     userObject.logado = false
 
-    localStorage.clear()
+    localStorage.removeItem("user")
 }
 
 btnSearchPostMobile.addEventListener('click', openSearchMobile)
