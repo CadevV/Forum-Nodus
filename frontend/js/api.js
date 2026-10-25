@@ -6,6 +6,14 @@ async function health(){
     console.log(dados)
 }
 
+async function healthBanco() {
+    const resposta = await fetch(`http://localhost:3000/health`)
+
+    const dados = await resposta.json()
+
+    console.log(dados)
+}
+
 async function criarPostApi(usuario,tags, titulo, conteudo) {
     const post = {
         "user": usuario,

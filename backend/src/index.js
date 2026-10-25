@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express from "express";
 import cors from 'cors';
 import { string, z, ZodObject } from 'zod';
+import { pool } from "./db/db.js"
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -122,7 +123,16 @@ app.post('/login', (req, res) =>{
 })
 
 app.get('/health', (req,res)=>{
-    res.json({"Server": "OK"})
+    res.status(200).json({"Server": "OK"})
+})
+
+app.get('/healthBanco', async (req, res) => {
+    try {
+        await pool.query('SELECT 1')
+        res.status(200).json({"Banco": "OK"})
+    } catch (erro) {
+        res.status(500).json({"Erro": erro.message})
+    }
 })
 
 app.get('/', (req, res)=>{
@@ -135,4 +145,5 @@ app.listen(port, (error)=>{
         return
     }
     console.log(`server rodandando na ${port}`)
+    console.log(process.env.PGHOST)
 })
