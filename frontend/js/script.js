@@ -179,7 +179,7 @@ async function recuperarPost() {
     const titulo = elementNewPost.querySelector(".titlePost");
     const conteudo = elementNewPost.querySelector(".contPost");
 
-    usuario.textContent = postFront[i].user
+    usuario.textContent = postFront[i].autor
     tag.textContent = postFront[i].tags
     titulo.textContent = postFront[i].titulo
     conteudo.textContent = postFront[i].conteudo

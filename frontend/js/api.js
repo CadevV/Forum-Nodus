@@ -7,7 +7,7 @@ async function health(){
 }
 
 async function healthBanco() {
-    const resposta = await fetch(`http://localhost:3000/health`)
+    const resposta = await fetch(`http://localhost:3000/healthBanco`)
 
     const dados = await resposta.json()
 
@@ -36,7 +36,7 @@ async function criarPostApi(usuario,tags, titulo, conteudo) {
         throw new Error("post invalido")
     }
     
-    return await resposta.json()
+    return resposta.json()
 }
 
 async function recuperarPostApi() {
@@ -112,3 +112,4 @@ async function loginContaApi(nameUser, passUser) {
 }
 
 health()
+healthBanco()

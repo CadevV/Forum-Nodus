@@ -3,6 +3,7 @@ import express from "express";
 import cors from 'cors';
 import { string, z, ZodObject } from 'zod';
 import { pool } from "./db/db.js"
+import { da } from 'zod/v4/locales';
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -10,7 +11,6 @@ const port = process.env.PORT || 3000
 app.use(express.json())
 app.use(cors())
 
-const listaPost = []
 const listaUsuarios = [
     {
         id: 0,
@@ -20,7 +20,6 @@ const listaUsuarios = [
     }
 ]
 
-let idPost = 0
 let idUser = 1
 
 const postValidado = z.object({
@@ -41,29 +40,46 @@ const userValidLogin = z.object({
     pass: z.union([z.string(), z.number()])
 })
 
-app.post('/post', (req, res)=>{
-    const resultado = postValidado.safeParse(req.body)
+app.post('/post', async (req, res)=>{
+    try {
+        const resultado = postValidado.safeParse(req.body)
 
-    if(!resultado.success){
-        return res.status(400).json({erros: resultado.error.issues})
+        if(!resultado.success){
+            return res.status(400).json({erros: resultado.error.issues})
+        }
+        
+        const dados = resultado.data
+
+        const respostaBanco = await pool.query(
+            `
+            INSERT INTO tbPost
+            (tags, autor, titulo, conteudo)
+            VALUES ($1, $2, $3, $4)
+            RETURNING *
+            `,
+            [dados.tags, dados.user, dados.titulo, dados.conteudo]
+        )
+
+        return res.status(201).json(`Post Criado`)
+    } catch (erro){
+        console.log("erro:", erro.message)
+        res.status(500).json("ERRO AO TENTAR CRIAR POST")
     }
-    
-    const dados = resultado.data
 
-    const novoPost = {
-        id:idPost++,
-        ...dados
-    }
-
-    listaPost.push(novoPost)
-
-    return res.status(201).json("post criado")
 })
 
-app.get('/post', (req, res)=>{
-    res.json(listaPost)
+app.get('/post', async(req, res)=>{
+    try{
+        const resposta = await pool.query(
+            `SELECT * FROM tbPost`
+        )     
+        
+        res.json(resposta.rows)
+    } catch (erro) {
+        console.log("erro:", erro.message)
+        res.status(500).json("ERRO AO TENTAR PROCURAR POST")
+    }
 
-    return listaPost
 })
 
 app.post("/cadastrar", (req, res)=>{
@@ -131,7 +147,8 @@ app.get('/healthBanco', async (req, res) => {
         await pool.query('SELECT 1')
         res.status(200).json({"Banco": "OK"})
     } catch (erro) {
-        res.status(500).json({"Erro": erro.message})
+        console.log({"Erro": erro.message})
+        res.status(500).json({"Erro": "Banco"})
     }
 })
 
