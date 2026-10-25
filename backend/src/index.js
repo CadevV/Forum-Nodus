@@ -3,7 +3,8 @@ import express from "express";
 import cors from 'cors';
 import { string, z, ZodObject } from 'zod';
 import { pool } from "./db/db.js"
-import { da } from 'zod/v4/locales';
+import bcrypt from 'bcrypt'
+import { tr } from 'zod/v4/locales';
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -19,6 +20,8 @@ const listaUsuarios = [
         pass: "adm123"
     }
 ]
+
+const keyHash = 12
 
 let idUser = 1
 
@@ -82,60 +85,97 @@ app.get('/post', async(req, res)=>{
 
 })
 
-app.post("/cadastrar", (req, res)=>{
-    const resultado = userValid.safeParse(req.body);
-    if(!resultado.success){
-        return res.status(400).json({erros: resultado.error.issues})
+app.post("/cadastrar", async (req, res)=>{
+    try {
+        const resultado = userValid.safeParse(req.body);
+        if(!resultado.success){
+            return res.status(400).json({erros: resultado.error.issues})
+        }
+
+        const dados = resultado.data
+
+        const passHash = await bcrypt.hash(dados.pass, keyHash)
+
+        const registroBanco = await pool.query(
+            `
+            INSERT INTO tbUser (emailUser, nameUser, hashUser)
+            VALUES ($1, $2, $3)
+            RETURNING *
+            `,
+            [dados.email, dados.name, passHash]
+        )
+
+        const newUser = registroBanco.rows[0]
+
+        console.log(newUser)
+
+        console.log(`Usuario Criado ${newUser.nameuser}`)
+        return res.json(newUser)
+    } catch (erro){
+        console.log("erro:", erro.message)
+        res.status(500).json("ERRO AO CADASTRAR")
     }
-
-    const verify = listaUsuarios.find(el => el.email == resultado.data.email || el.name == resultado.data.name)
-
-    if(verify) return res.status(400).json("o email " + resultado.data.email + "ou"+ resultado.data.name + " Já está sendo usado")
-
-    const newUser ={
-        id: idUser++,
-        ...resultado.data,
-        logado: true
-    }
-    
-    listaUsuarios.push(newUser)
-
-    const postResposta = {...listaUsuarios[newUser.id]}
-
-    delete postResposta.pass
-
-    console.log(`Usuario Criado ${listaUsuarios[newUser.id].name.toUpperCase()}`)
-    return res.json(postResposta)
 })
 
-app.get("/cadastrar", (req, res)=>{
-    const listaGet = structuredClone(listaUsuarios)
-    listaGet.forEach(element => {
-        delete element.pass
-    });
-    res.json(listaGet)
+app.get("/cadastrar", async (req, res)=>{
+    try{
+        const usuariosCadastrados = await pool.query(
+            `
+            SELECT id, emailuser, nameuser FROM tbUser
+            `
+        )
+        res.status(200).json(usuariosCadastrados.rows[0])
+    } catch (erro) {
+        console.log("ERRO", erro.message)
+        res.json("ERRO AO PUXAR USUARIO")
+    }
+
 })
 
-app.post('/login', (req, res) =>{
-    const resultado = userValidLogin.safeParse(req.body);
+app.post('/login', async (req, res) =>{
+    try {
+        const resultado = userValidLogin.safeParse(req.body);
 
-    if(!resultado.success){
-        return res.status(400).json({erros: resultado.error.issues})
+        if(!resultado.success){
+            return res.status(400).json({erros: resultado.error.issues})
+        }
+
+        const dados = resultado.data
+
+        const consulta = await pool.query(
+            `SELECT * FROM tbUser WHERE nameuser = $1`,
+            [dados.name]
+        )
+
+        const usuario = consulta.rows[0]
+        
+        if(!usuario){
+            return res.status(401).json({
+                erro: "Credenciais inválidas"
+            })
+        }
+
+        const verificarSenha = await bcrypt.compare(dados.pass, usuario.hashuser)
+
+        if (!verificarSenha) {
+            return res.status(401).json({
+                erro: "Credenciais inválidas"
+            })
+        }
+
+        return res.status(200).json({
+            id: usuario.id,
+            name: usuario.nameuser,
+            logado: true
+        })
+
+    } catch (erro) {
+        console.log("ERRO", erro.message)
+
+        return res.status(500).json({
+            erro: "Erro interno ao realizar login"
+        })
     }
-
-    const findUser = listaUsuarios.find(el => el.name == resultado.data.name && el.pass == resultado.data.pass)
-
-    if(!findUser){
-        return res.status(404).json("Usuario não encontrado ")
-    }
-
-    findUser.logado = true
-
-    const postReposta = {...findUser}
-
-    delete postReposta.pass
-
-    res.status(200).json(postReposta)
 })
 
 app.get('/health', (req,res)=>{
