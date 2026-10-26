@@ -25,7 +25,7 @@ async function montarPerfil() {
   const posts = await recuperarPostApi();
   listaPost.push(...posts);
 
-  const postsUsuario = listaPost.filter((el) => el.user == nomePerfil);
+  const postsUsuario = listaPost.filter(el => el.autor == nomePerfil);
 
   const quantidadePosts = postsUsuario.length;
 

@@ -116,7 +116,21 @@ async function cadastrarConta(){
         return        
     }
 
-    window.location.href = './../frontend/index.html'
+    if(!btnSelectLogin.classList.contains('active')){
+        btnSelectLogin.classList.add('active')
+        btnSelectCadastro.classList.remove('active')
+    }else{
+        btnSelectCadastro.classList.add('active')
+        btnSelectLogin.classList.remove('active')
+    }
+
+    if(btnSelectLogin.classList.contains('active')){
+        formLogin.classList.add('active')
+        formCadastro.classList.remove('active')
+    }else{
+        formLogin.classList.remove('active')
+        formCadastro.classList.add('active')
+    }
 }
 
 btnSelectLogin.addEventListener('click', trocarMenuLogin)

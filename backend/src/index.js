@@ -100,7 +100,7 @@ app.post("/cadastrar", async (req, res)=>{
             `
             INSERT INTO tbUser (emailUser, nameUser, hashUser)
             VALUES ($1, $2, $3)
-            RETURNING *
+            RETURNING id, emailuser, nameuser
             `,
             [dados.email, dados.name, passHash]
         )
