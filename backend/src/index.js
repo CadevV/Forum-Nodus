@@ -4,7 +4,6 @@ import cors from 'cors';
 import { string, z, ZodObject } from 'zod';
 import { pool } from "./db/db.js"
 import bcrypt from 'bcrypt'
-import { tr } from 'zod/v4/locales';
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -12,18 +11,7 @@ const port = process.env.PORT || 3000
 app.use(express.json())
 app.use(cors())
 
-const listaUsuarios = [
-    {
-        id: 0,
-        email: "adm@adm.com",
-        name: "admin",
-        pass: "adm123"
-    }
-]
-
 const keyHash = 12
-
-let idUser = 1
 
 const postValidado = z.object({
     user: z.string(),
@@ -34,13 +22,13 @@ const postValidado = z.object({
 
 const userValid = z.object({
     email: z.string().email(),
-    name: z.union([z.string().min(2).max(10), z.number().max(10)]),
-    pass: z.union([z.string(), z.number()])
+    name: z.string().min(2).max(20),
+    pass: z.string()
 })
 
 const userValidLogin = z.object({
-    name: z.union([z.string().min(2).max(10), z.number().max(10)]),
-    pass: z.union([z.string(), z.number()])
+    name: z.string().min(2).max(20),
+    pass: z.string()
 })
 
 app.post('/post', async (req, res)=>{
@@ -121,7 +109,7 @@ app.get("/cadastrar", async (req, res)=>{
     try{
         const usuariosCadastrados = await pool.query(
             `
-            SELECT id, emailuser, nameuser FROM tbUser
+            SELECT id, nameuser FROM tbUser
             `
         )
         res.status(200).json(usuariosCadastrados.rows[0])

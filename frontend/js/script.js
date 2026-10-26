@@ -61,11 +61,12 @@ function logicaCadastroPerfil(){
 
 function buscarPost() {
   const valorSearch = inputSearch.value;
+  const valorSearchTratado = valorSearch.toLowerCase().trim()
   const postAtuais = document.querySelectorAll(".boxPost");
 
   postAtuais.forEach((post) => {
-    const titulo = post.querySelector(".titlePost").textContent.toLowerCase();
-    if (titulo.includes(valorSearch)) {
+    const titulo = post.querySelector(".titlePost").textContent.toLowerCase().trim();
+    if (titulo.includes(valorSearchTratado)) {
       post.classList.remove("off");
       return
     }
