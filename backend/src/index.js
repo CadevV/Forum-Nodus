@@ -117,7 +117,6 @@ app.get("/cadastrar", async (req, res)=>{
         console.log("ERRO", erro.message)
         res.json("ERRO AO PUXAR USUARIO")
     }
-
 })
 
 app.post('/login', async (req, res) =>{

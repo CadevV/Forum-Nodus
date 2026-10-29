@@ -331,13 +331,13 @@ body::-webkit-scrollbar{
     color: var(--roxoHover);
 }
 
-.select{
+.select, .selectExplorer{
     transform: translateX(10px);
     text-decoration: none;
     color: var(--roxoPrincipal);
 }
 
-.select:hover{
+.select:hover, .selectExplorer:hover{
     color: var(--roxoPrincipal);
 }
 
@@ -840,5 +840,10 @@ body::-webkit-scrollbar{
 
     .boxInfoLogin{
       display: none;  
+    }
+
+    /* PERFIL */
+    .imgPerfil{
+        display: none;
     }
 }

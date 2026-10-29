@@ -3,6 +3,8 @@ const searchMobile = document.querySelector(".searchPost")
 const btnsOptionsHeader =  document.querySelectorAll('.btnOption')
 const btnSearchPostMobile = document.querySelector(".headerSearchMobile")
 const btnOpenModal = document.querySelector(".headerNewPost");
+const boxFiltros = document.getElementById('listaFiltros')
+const btnsFiltros = document.querySelectorAll('.linkExplorer')
 const btnOpenLogin = document.querySelector(".headerAcont");
 const btnCloseModal = document.querySelectorAll(".btnCloseModal");
 const modalPost = document.querySelector(".overlayModalPost");
@@ -18,8 +20,35 @@ const optionPerfilModal = document.querySelectorAll('.optionPerfil')
 const btnDeslogar = document.getElementById('btnDeslogar')
 
 const postFront = [];
+const postFrontHtml = []
 const userUsuario = localStorage.getItem('user')
 const userObject = JSON.parse(userUsuario)
+
+function filtroPosts(event) {
+  const btnClicado = event.target
+
+  if(btnClicado.classList.contains('linkExplorer')){
+    btnsFiltros.forEach(element => {
+      element.classList.remove("select")
+    });
+
+    btnClicado.classList.add('select')
+    const respostaFiltro = btnClicado.textContent.toLowerCase()
+
+    postFrontHtml.forEach((el, index) =>{
+      el.classList.add('off')
+      
+      const dadosPost = postFront[index]
+
+      if(respostaFiltro === "geral"){
+        el.classList.remove('off')
+      }
+      else if(dadosPost && dadosPost.tags.includes(respostaFiltro)){
+        el.classList.remove('off')
+      }
+    })
+  }
+}
 
 function openSearchMobile(){
   btnsOptionsHeader.forEach(element => {
@@ -186,6 +215,7 @@ async function recuperarPost() {
     conteudo.textContent = postFront[i].conteudo
 
     containerPosts.appendChild(elementNewPost);
+    postFrontHtml.push(elementNewPost)
   }
 }
 
@@ -196,6 +226,10 @@ function deslogarConta(){
 }
 
 btnSearchPostMobile.addEventListener('click', openSearchMobile)
+
+boxFiltros.addEventListener('click', (event)=>{
+  filtroPosts(event)
+})
 
 btnOpenModal.addEventListener("click", () => {
   openModalPost(modalPost, boxModalPost);
