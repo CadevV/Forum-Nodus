@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import express from "express";
 import cors from 'cors';
-import { string, z, ZodObject } from 'zod';
+import { z } from 'zod';
 import { pool } from "./db/db.js"
 import bcrypt from 'bcrypt'
 
@@ -19,6 +19,8 @@ const postValidado = z.object({
     titulo: z.string().min(3).max(20),
     conteudo: z.string().min(5).max(200)
 })
+
+const schemaId = z.coerce.number().int().min(1)
 
 const userValid = z.object({
     email: z.string().email(),
@@ -73,6 +75,31 @@ app.get('/post', async(req, res)=>{
 
 })
 
+app.delete('/post/:id', async (req, res) =>{
+    try{
+        const resultado = schemaId.safeParse(req.params.id)
+
+        if (!resultado.success) {
+            return res.status(400).json({ erro: 'id inválido' })
+        }
+
+        const id = resultado.data
+
+        const consulta = await pool.query(
+            `DELETE FROM tbPost WHERE id = $1`,
+            [id]
+        )
+
+        if(consulta.rowCount === 0){
+            return res.status(404).json({"Post": "Não encontrado"})
+        }
+        return res.sendStatus(204)
+    } catch (erro) {
+        console.error(erro)
+        return res.status(500).json({ erro: 'Erro interno' })
+    }
+})
+
 app.post("/cadastrar", async (req, res)=>{
     try {
         const resultado = userValid.safeParse(req.body);
@@ -112,7 +139,7 @@ app.get("/cadastrar", async (req, res)=>{
             SELECT id, nameuser FROM tbUser
             `
         )
-        res.status(200).json(usuariosCadastrados.rows[0])
+        res.status(200).json(usuariosCadastrados.rows)
     } catch (erro) {
         console.log("ERRO", erro.message)
         res.json("ERRO AO PUXAR USUARIO")
@@ -165,6 +192,58 @@ app.post('/login', async (req, res) =>{
     }
 })
 
+app.delete('/usuario/:id', async (req, res) =>{
+    try{
+        const resposta = schemaId.safeParse(req.params.id)
+
+        if(!resposta.success) {
+            return res.status(400).json("Falha na Requisição")
+        }
+
+        const id = resposta.data
+
+        const consulta = await pool.query(
+            `DELETE FROM tbUser WHERE id = $1`,
+            [id]
+        )
+
+        if(consulta.rowCount === 0){
+            return res.status(404).json({"Usuario": "Não Encontrado"})
+        }
+
+        return res.sendStatus(204)
+    } catch (erro){
+        console.log(erro)
+        return res.status(500).json("Erro no Servidor")
+    }
+})
+
+app.get("/usuario/:id", async (req, res) =>{
+    try{
+        const resposta = schemaId.safeParse(req.params.id)
+
+        if(!resposta.success){
+            return res.status(400).json('Falha na Requisição')
+        }
+
+        const id = resposta.data
+
+        const consulta = await pool.query(
+            `SELECT nameuser FROM tbUser WHERE id = $1`,
+            [id]
+        )
+
+        if(consulta.rowCount === 0){
+            return res.status(404).json({"Usuario": "Não encontrado"})
+        }
+
+        return res.status(200).json(consulta.rows[0])
+    } catch (erro){
+        console.log(erro)
+        return res.status(500).json("Erro no servidor")
+    }
+})
+
 app.get('/health', (req,res)=>{
     res.status(200).json({"Server": "OK"})
 })
@@ -189,5 +268,4 @@ app.listen(port, (error)=>{
         return
     }
     console.log(`server rodandando na ${port}`)
-    console.log(process.env.PGHOST)
 })

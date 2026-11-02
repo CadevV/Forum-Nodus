@@ -1,5 +1,7 @@
+const URLBASE = "http://localhost:3000"
+
 async function health(){
-    const resposta = await fetch(`http://localhost:3000/health`)
+    const resposta = await fetch(`${URLBASE}/health`)
 
     const dados = await resposta.json()
 
@@ -7,7 +9,7 @@ async function health(){
 }
 
 async function healthBanco() {
-    const resposta = await fetch(`http://localhost:3000/healthBanco`)
+    const resposta = await fetch(`${URLBASE}/healthBanco`)
 
     const dados = await resposta.json()
 
@@ -22,7 +24,7 @@ async function criarPostApi(usuario,tags, titulo, conteudo) {
         "conteudo": conteudo
     }
 
-    const resposta = await fetch("http://localhost:3000/post",{
+    const resposta = await fetch(`${URLBASE}/post`,{
         method: "POST",
 
         headers: {
@@ -40,7 +42,7 @@ async function criarPostApi(usuario,tags, titulo, conteudo) {
 }
 
 async function recuperarPostApi() {
-    const resposta = await fetch("http://localhost:3000/post")
+    const resposta = await fetch(`${URLBASE}/post`)
 
     const dados = await resposta.json()
 
@@ -53,7 +55,7 @@ async function cadastrarContaApi(emailUser, nameUser, passUser) {
         name: nameUser,
         pass: passUser
     }
-    const resposta = await fetch("http://localhost:3000/cadastrar", {
+    const resposta = await fetch(`${URLBASE}/cadastrar`, {
         method: "POST",
 
         headers: {
@@ -85,7 +87,7 @@ async function loginContaApi(nameUser, passUser) {
         pass: passUser
     }
 
-    const resposta = await fetch("http://localhost:3000/login",{
+    const resposta = await fetch(`${URLBASE}/login`,{
         method: "POST",
 
         headers:{
