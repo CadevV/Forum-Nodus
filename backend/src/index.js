@@ -1,4 +1,6 @@
 import 'dotenv/config';
+import session from "express-session"
+import connectPgSimple from "connect-pg-simple"
 import express from "express";
 import cors from 'cors';
 import { z } from 'zod';
@@ -7,9 +9,35 @@ import bcrypt from 'bcrypt'
 
 const app = express()
 const port = process.env.PORT || 3000
+const PgSession = connectPgSimple(session)
 
 app.use(express.json())
 app.use(cors())
+
+app.use(session({
+    store: new PgSession({
+        pool: pool,
+        tableName: "session",
+        createTableIfMissing: true
+    }),
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24,
+        httpOnly: true,
+        secure: false
+    }
+})
+)
+
+function verificarSecao(req, res, next){
+    if(!req.session.userId){
+        return res.status(401).json({"Erro": "Authenticação"})
+    }
+
+    next()
+}
 
 const keyHash = 12
 
@@ -75,7 +103,7 @@ app.get('/post', async(req, res)=>{
 
 })
 
-app.delete('/post/:id', async (req, res) =>{
+app.delete('/post/:id', verificarSecao, async (req, res) =>{
     try{
         const resultado = schemaId.safeParse(req.params.id)
 
@@ -177,6 +205,7 @@ app.post('/login', async (req, res) =>{
             })
         }
 
+        req.session.userId = usuario.id
         return res.status(200).json({
             id: usuario.id,
             name: usuario.nameuser,
