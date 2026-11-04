@@ -1,60 +1,64 @@
 # Nodus
 
-**Meu primeiro projeto full-stack: um fórum de discussões desenvolvido com JavaScript, Node.js, Express e PostgreSQL.**
+**Meu primeiro projeto full-stack: um fórum de publicações desenvolvido com JavaScript, Node.js, Express e PostgreSQL.**
 
-> **Status:** V1 — etapa de estudos concluída.  
-> **Finalidade:** aprendizado e portfólio. **Não recomendado para uso em produção.**
+> **Versão:** 2.0 — etapa de desenvolvimento concluída para fins de estudo.  
+> **Status:** projeto de aprendizado e portfólio, executado localmente. **Não preparado para uso em produção.**
 
-O **Nodus** é um fórum criado como projeto individual de estudos para praticar o desenvolvimento de uma aplicação web de ponta a ponta: interface, consumo de API REST, validação de dados e persistência em banco de dados relacional.
+O **Nodus** é um fórum criado como projeto individual para aprender a desenvolver uma aplicação web de ponta a ponta: construir a interface, criar uma API REST, validar requisições, autenticar usuários, controlar permissões e persistir informações em um banco de dados relacional.
 
-A aplicação permite cadastrar usuários, verificar credenciais de login, publicar conteúdos, explorar o feed, pesquisar por título e visualizar publicações no perfil. O objetivo desta primeira versão foi consolidar os fundamentos do desenvolvimento full-stack — não reproduzir todas as funcionalidades de uma rede social.
+A versão 1.0 foi a primeira etapa desse aprendizado. A **v2.0** evoluiu o projeto com sessões autenticadas por cookie, vínculo entre posts e usuários e funcionalidades de exclusão.
 
 ## Funcionalidades
 
-- **Cadastro de usuários:** recebe nome de usuário, e-mail e senha e salva os dados no PostgreSQL.
-- **Verificação de login:** consulta o usuário no banco e confere a senha informada.
-- **Proteção de senhas:** armazena hashes gerados com `bcrypt`, em vez de senhas em texto puro.
-- **Publicações:** cria e lista posts com autor, categoria, título e conteúdo.
-- **Persistência:** usuários e publicações permanecem salvos após reiniciar o backend.
-- **Pesquisa:** filtra publicações pelo título, ignorando diferenças entre maiúsculas e minúsculas.
-- **Categorias:** permite filtrar visualmente publicações carregadas por assunto (Geral, Programação, Jogos e Tecnologia).
-- **Perfil:** exibe o nome, a quantidade de posts e as publicações associadas ao nome do usuário.
-- **Logout local:** limpa os dados de login armazenados no navegador.
-- **Monitoramento básico:** disponibiliza endpoints para verificar a API e a conexão com o banco.
+- **Cadastro:** criação de contas com nome de usuário, e-mail e senha.
+- **Login e logout:** autenticação com sessões gerenciadas pelo Express e armazenadas no PostgreSQL.
+- **Senhas protegidas:** armazenamento de hashes com `bcrypt` — a senha original não é salva no banco.
+- **Publicações:** criação e visualização de posts com categoria, título, conteúdo e autor.
+- **Feed:** listagem das publicações cadastradas, com pesquisa por título e filtro por categoria.
+- **Categorias:** Geral, Programação, Jogos e Tecnologia.
+- **Perfil:** visualização do nome do usuário, quantidade de posts e suas publicações.
+- **Exclusão de posts:** opção disponível no perfil; o backend verifica se o post pertence ao usuário autenticado.
+- **Exclusão de conta:** remove a conta e suas publicações em uma transação no banco, e encerra a sessão após a exclusão.
+- **Monitoramento básico:** endpoints para verificar a disponibilidade da API e a conexão com o banco.
 
-> **Observação:** o login desta versão **não estabelece uma sessão autenticada no servidor**. O campo `logado` armazenado no navegador controla apenas a interface. Consulte [Limitações conhecidas](#limitações-conhecidas).
+> A v2.0 representa a conclusão de uma etapa de estudos, não um produto completo. Algumas opções visuais ainda são demonstrativas; veja [Limitações conhecidas](#limitações-conhecidas).
 
-## Tecnologias utilizadas
+## Tecnologias
 
 | Camada | Tecnologias |
 | --- | --- |
-| Frontend | HTML5, CSS3, JavaScript (Vanilla JS), Bootstrap Icons |
-| Backend | Node.js, Express |
+| Frontend | HTML5, CSS3, JavaScript puro (Vanilla JS), Bootstrap Icons |
+| Backend | Node.js, Express 5 |
 | Banco de dados | PostgreSQL |
-| Conexão com o banco | `pg` (`Pool`) |
+| Acesso ao banco | `pg` (`Pool`) |
+| Autenticação | `express-session` e `connect-pg-simple` |
+| Senhas | `bcrypt` |
 | Validação | Zod |
-| Hash de senhas | bcrypt |
-| Configuração e comunicação | dotenv, CORS, Fetch API e JSON |
+| Comunicação e configuração | Fetch API, JSON, CORS, dotenv |
+
+O frontend não utiliza frameworks como React ou Vue. O projeto foi desenvolvido com o objetivo de praticar os fundamentos antes de adicionar ferramentas mais complexas.
 
 ## Estrutura do projeto
 
 ```text
 Forum-Nodus/
 ├── backend/
-│   ├── src/
-│   │   ├── db/
-│   │   │   └── db.js         # Configuração do Pool PostgreSQL
-│   │   └── index.js         # API, validações e rotas
+│   ├── .env.example          # Exemplo das variáveis de ambiente
 │   ├── package.json
-│   └── package-lock.json
+│   ├── package-lock.json
+│   └── src/
+│       ├── db/
+│       │   └── db.js         # Pool do PostgreSQL
+│       └── index.js          # Servidor, sessões, validações e rotas
 ├── frontend/
 │   ├── css/
 │   │   └── style.css
 │   ├── js/
-│   │   ├── api.js           # Requisições HTTP
-│   │   ├── login.js         # Interface de cadastro e login
-│   │   ├── perfil.js        # Informações e posts do perfil
-│   │   └── script.js        # Feed, pesquisa e filtros
+│   │   ├── api.js           # Requisições à API
+│   │   ├── login.js         # Cadastro e login
+│   │   ├── perfil.js        # Perfil e exclusão de posts
+│   │   └── script.js        # Feed, pesquisa, filtros e modais
 │   ├── index.html
 │   ├── login.html
 │   └── perfil.html
@@ -66,11 +70,11 @@ Forum-Nodus/
 
 ### Pré-requisitos
 
-- Node.js **20.6 ou superior** e npm.
-- PostgreSQL instalado e em execução.
-- Um navegador atualizado.
-- Um servidor local para o frontend (por exemplo, a extensão **Live Server** do VS Code).
-- Opcionalmente, pgAdmin ou outra ferramenta para executar comandos SQL.
+- **Node.js 20.6 ou superior**, com npm. O script do projeto usa `node --env-file`.
+- **PostgreSQL** instalado e em execução.
+- Navegador atualizado.
+- Um servidor HTTP para o frontend, como a extensão **Live Server** do VS Code.
+- Uma ferramenta para executar SQL, como `psql` ou pgAdmin.
 
 ### 1. Clonar o repositório
 
@@ -79,24 +83,24 @@ git clone https://github.com/CadevV/Forum-Nodus.git
 cd Forum-Nodus
 ```
 
-### 2. Instalar as dependências
+### 2. Instalar as dependências do backend
 
 ```bash
 cd backend
 npm install
 ```
 
-### 3. Preparar o PostgreSQL
+### 3. Preparar o banco de dados
 
-Crie um banco chamado `dbNodus`, ou escolha outro nome e ajuste `PGDATABASE` no arquivo `.env`. Se estiver usando um editor SQL conectado a outro banco, você pode criar o banco com:
+Crie um banco PostgreSQL chamado `dbNodus` (ou utilize outro nome e ajuste `PGDATABASE`):
 
 ```sql
 CREATE DATABASE "dbNodus";
 ```
 
-**Em seguida, conecte-se ao banco criado** antes de executar os comandos abaixo. O código espera as tabelas `tbUser` e `tbPost` (identificadores não delimitados são convertidos para minúsculas pelo PostgreSQL).
+**Conecte-se ao banco criado** antes de executar as instruções abaixo. O backend espera as tabelas `tbUser` e `tbPost`, incluindo o campo `usuario_id` que relaciona os posts aos usuários.
 
-Exemplo de estrutura mínima compatível com o backend atual:
+Exemplo de esquema mínimo compatível para **uma instalação nova**:
 
 ```sql
 CREATE TABLE IF NOT EXISTS tbUser (
@@ -111,15 +115,22 @@ CREATE TABLE IF NOT EXISTS tbPost (
     tags TEXT NOT NULL,
     autor TEXT NOT NULL,
     titulo VARCHAR(20) NOT NULL,
-    conteudo VARCHAR(200) NOT NULL
+    conteudo VARCHAR(200) NOT NULL,
+    usuario_id INTEGER NOT NULL REFERENCES tbUser(id)
 );
 ```
 
-> **Atenção:** esse SQL é um exemplo para uma **instalação nova**, não uma migration versionada. Se já houver tabelas e dados no banco, não recrie nem substitua a estrutura sem verificar seu esquema existente. `IF NOT EXISTS` não modifica tabelas antigas.
+> **Importante:** esse SQL é um exemplo elaborado a partir das consultas do backend, não uma migration oficial do projeto. Não o execute cegamente sobre um banco existente da v1: `CREATE TABLE IF NOT EXISTS` não adiciona colunas ausentes nem migra dados. A tabela `session` é gerenciada pelo `connect-pg-simple` com `createTableIfMissing: true`.
 
-### 4. Configurar as variáveis de ambiente
+### 4. Configurar o ambiente
 
-Na pasta `backend/`, crie um arquivo `.env`:
+Na pasta `backend`, copie o exemplo para um arquivo `.env`:
+
+```bash
+cp .env.example .env
+```
+
+Ou crie o arquivo manualmente, com o seguinte conteúdo:
 
 ```env
 PORT=3000
@@ -128,47 +139,76 @@ PGPORT=5432
 PGDATABASE=dbNodus
 PGUSER=postgres
 PGPASSWORD=SUA_SENHA_LOCAL
+SESSION_SECRET=UMA_CHAVE_ALEATORIA_LONGA_E_SECRETA
 ```
 
-Ajuste usuário, senha, host e porta conforme sua instalação. O `.env` está incluído no `.gitignore` e **não deve ser publicado no GitHub**.
+Substitua os valores pelos dados do seu PostgreSQL. Use uma chave longa e aleatória em `SESSION_SECRET`, necessária para assinar o cookie da sessão.
 
-### 5. Iniciar a API
+O arquivo `.env` é ignorado pelo Git; **não publique credenciais no repositório**.
 
-Dentro de `backend/`, execute:
+### 5. Iniciar o backend
+
+Ainda em `backend/`, execute:
 
 ```bash
 npm start
 ```
 
-Por padrão, o servidor ficará disponível em `http://localhost:3000`.
+A API utiliza `http://localhost:3000` por padrão.
 
-Para conferir a configuração:
+Você pode verificar:
 
-- `GET http://localhost:3000/health` — verifica se o Express está respondendo.
-- `GET http://localhost:3000/healthBanco` — executa `SELECT 1` para testar a conexão com o PostgreSQL.
+- `GET http://localhost:3000/health` — disponibilidade do Express.
+- `GET http://localhost:3000/healthBanco` — conexão com o PostgreSQL.
 
 ### 6. Abrir o frontend
 
-Abra `frontend/index.html` com o Live Server (ou outro servidor HTTP local). Mantenha a API e o PostgreSQL em execução durante o uso.
+Abra `frontend/index.html` com o **Live Server**, utilizando a origem `http://localhost:5500`.
 
-As requisições do frontend apontam para `http://localhost:3000`. Caso altere a porta da API, atualize os endereços em `frontend/js/api.js`.
+Essa origem está configurada no CORS do backend. As requisições do frontend apontam para `http://localhost:3000`, conforme `frontend/js/api.js`. Se alterar as portas ou a origem, será necessário ajustar essas configurações.
+
+Mantenha o PostgreSQL e o backend em execução durante o uso.
+
+## Autenticação e autorização
+
+Na v2.0, o login não depende de um estado de autenticação mantido apenas no navegador:
+
+1. O usuário envia nome e senha para `POST /login`.
+2. O backend compara a senha com o hash salvo no banco.
+3. Após autenticar, o Express cria uma sessão com o identificador do usuário (`req.session.userId`).
+4. O navegador recebe o cookie de sessão (`connect.sid`) e o envia nas requisições autenticadas.
+5. As rotas protegidas verificam a sessão no servidor antes de executar operações.
+
+O armazenamento das sessões usa `connect-pg-simple` com PostgreSQL. No frontend, as requisições autenticadas usam `credentials: "include"`.
+
+**Permissões implementadas:**
+
+- Criar um post exige uma sessão autenticada. O autor é obtido pelo backend a partir do usuário logado, e não de um nome enviado pelo cliente.
+- Excluir um post exige autenticação **e** que o post pertença ao usuário da sessão.
+- Excluir uma conta exige autenticação e correspondência entre o ID solicitado e o ID do usuário da sessão.
+- Ao excluir a conta, o backend também remove seus posts e tenta destruir a sessão e limpar o cookie.
 
 ## Rotas da API
 
-| Método | Endpoint | Comportamento atual |
-| --- | --- | --- |
-| `GET` | `/` | Informa que a API está em execução. |
-| `GET` | `/health` | Verifica a resposta do servidor Express. |
-| `GET` | `/healthBanco` | Testa o acesso ao PostgreSQL. |
-| `GET` | `/post` | Retorna um array de posts armazenados no banco. |
-| `POST` | `/post` | Valida e insere uma publicação; retorna HTTP `201` em caso de sucesso. |
-| `POST` | `/cadastrar` | Valida os dados, gera o hash da senha e cria um usuário. |
-| `POST` | `/login` | Verifica nome e senha; retorna HTTP `401` para credenciais incorretas. |
-| `GET` | `/cadastrar` | Rota de estudo que retorna **somente o primeiro** usuário encontrado (`id` e `nameuser`); precisa de revisão. |
+| Método | Rota | Descrição | Autenticação |
+| --- | --- | --- | --- |
+| `GET` | `/` | Estado básico da API | Não |
+| `GET` | `/health` | Verifica o servidor | Não |
+| `GET` | `/healthBanco` | Verifica o banco de dados | Não |
+| `POST` | `/cadastrar` | Cadastra um usuário | Não |
+| `GET` | `/cadastrar` | Lista IDs e nomes de usuários (rota de estudo) | Não |
+| `POST` | `/login` | Confere credenciais e cria a sessão | Não |
+| `POST` | `/logout` | Encerra a sessão e limpa o cookie | Sessão existente para logout efetivo |
+| `GET` | `/auth/me` | Retorna ID, nome e quantidade de posts do usuário autenticado | Sim |
+| `GET` | `/usuario/:id` | Consulta o nome de um usuário por ID | Não |
+| `DELETE` | `/usuario/:id` | Exclui a própria conta e seus posts | Sim; somente o titular |
+| `GET` | `/post` | Lista as publicações | Não |
+| `POST` | `/post` | Cria uma publicação | Sim |
+| `DELETE` | `/post/:id` | Exclui uma publicação do próprio usuário | Sim; somente o autor |
 
-### Exemplo: cadastrar usuário
+### Exemplos de requisição
 
-`POST /cadastrar`
+**Cadastro — `POST /cadastrar`**
 
 ```json
 {
@@ -178,11 +218,7 @@ As requisições do frontend apontam para `http://localhost:3000`. Caso altere a
 }
 ```
 
-A API armazena o **hash** da senha, não a senha original. A resposta de sucesso retorna os campos `id`, `emailuser` e `nameuser`, sem expor o hash.
-
-### Exemplo: login
-
-`POST /login`
+**Login — `POST /login`**
 
 ```json
 {
@@ -191,70 +227,70 @@ A API armazena o **hash** da senha, não a senha original. A resposta de sucesso
 }
 ```
 
-Exemplo de resposta para credenciais válidas:
+Com credenciais válidas, o backend responde com os dados básicos do usuário e estabelece a sessão via cookie.
+
+**Publicação — `POST /post`** (requer autenticação)
 
 ```json
 {
-  "id": 1,
-  "name": "usuario1",
-  "logado": true
-}
-```
-
-**Importante:** esse objeto não é um token nem comprova autenticação em chamadas futuras ao backend.
-
-### Exemplo: criar uma publicação
-
-`POST /post`
-
-```json
-{
-  "user": "usuario1",
   "tags": "programação",
-  "titulo": "Meu primeiro post",
-  "conteudo": "Aprendendo a integrar Express com PostgreSQL!"
+  "titulo": "Primeiro post",
+  "conteudo": "Aprendendo a conectar o frontend ao backend!"
 }
 ```
 
-O Zod exige, entre outras regras, **título de 3 a 20 caracteres** e **conteúdo de 5 a 200 caracteres**. Em caso de sucesso, a API responde com HTTP `201` e o texto JSON `"Post Criado"`.
+O backend valida o título (de **3 a 20 caracteres**) e o conteúdo (de **5 a 200 caracteres**), associa automaticamente a publicação ao usuário autenticado e retorna `201` quando ela é criada.
 
-## Como os dados são organizados
+As rotas de exclusão retornam `204 No Content` em caso de sucesso. Erros de validação, autenticação, autorização ou recurso inexistente podem resultar, respectivamente, em `400`, `401`, `403` ou `404`.
 
-- **Usuários:** a tabela `tbUser` armazena e-mail, nome e hash da senha.
-- **Posts:** a tabela `tbPost` armazena categoria, autor, título e conteúdo.
-- **Autoria:** nesta versão, o campo `autor` é um texto com o nome informado na publicação; ainda não existe uma chave estrangeira relacionando posts a usuários.
-- **Estado visual de login:** a interface utiliza `localStorage`, mas o backend não mantém sessões autenticadas.
+## Evolução do projeto
+
+### v1.0 — Fundamentos
+
+Primeira etapa do Nodus: páginas, formulários, integração com API REST, cadastro, conferência de senha com `bcrypt`, criação e leitura de posts, pesquisa, filtros e persistência no PostgreSQL. O controle de login ainda não utilizava sessões autenticadas no servidor.
+
+### v2.0 — Sessões e controle de autoria
+
+- Autenticação baseada em sessões e cookies.
+- Persistência das sessões no PostgreSQL.
+- Verificação da conta autenticada por `GET /auth/me`.
+- Associação de publicações ao usuário por `usuario_id`.
+- Proteção de criação e exclusão de posts com autenticação e autorização.
+- Exclusão da conta e de suas publicações com transação SQL.
+- Encerramento da sessão no logout e após a exclusão da conta.
+- Integração das funcionalidades de exclusão à interface.
 
 ## Limitações conhecidas
 
-O Nodus é um projeto de estudos, **não uma aplicação pronta para produção**. As principais limitações desta V1 são:
+O Nodus é um **projeto de estudos**, não uma aplicação auditada ou preparada para receber usuários reais na internet. Pontos ainda não resolvidos ou não implementados:
 
-- **Autenticação e autorização:** não há sessões/cookies autenticados nem proteção real de `POST /post`. Uma requisição direta pode informar outro nome como autor.
-- **Fluxo de cadastro:** a interface alterna para a aba de login após cadastrar, mas `frontend/js/api.js` ainda grava os dados do cadastro no `localStorage` antes da autenticação.
-- **Validação de senha:** o backend verifica o tipo `string`, mas ainda não impõe um tamanho mínimo de senha.
-- **Tratamento de duplicidade:** conflitos de cadastro com restrições `UNIQUE` ainda não têm uma resposta específica `409`; podem retornar erro interno.
-- **Listagem de usuários:** a rota `GET /cadastrar` não tem controle de acesso e retorna apenas o primeiro registro.
-- **Filtros do feed:** a filtragem de categorias é básica; posts criados durante a sessão podem não entrar no filtro, e pesquisa e categoria não funcionam de maneira totalmente integrada.
-- **Interface:** algumas opções visuais, como Seguindo, Em Alta, edição de perfil e tags relacionadas, ainda não têm funcionalidade completa.
-- **Banco e qualidade:** não existem migrations versionadas, relacionamento por chave estrangeira entre posts e usuários nem testes automatizados configurados.
+- **Segurança para produção:** a configuração atual usa cookies com `secure: false`, CORS fixado em `http://localhost:5500` e não apresenta proteção dedicada contra CSRF. A implantação pública exige revisão de cookies, HTTPS, origens permitidas e proteção das operações autenticadas.
+- **Exclusão de conta:** há confirmação no navegador, mas não é solicitada a senha novamente antes de excluir a conta.
+- **Formulário de cadastro:** não há política de tamanho mínimo de senha no schema do backend; conflitos de unicidade do banco também não possuem tratamento HTTP específico.
+- **Rotas de estudo:** `GET /cadastrar` disponibiliza IDs e nomes de usuários sem autenticação. Essa rota deve ser revista antes de qualquer publicação pública.
+- **Filtros e pesquisa:** a busca por título e o filtro por categoria são funcionalidades locais da interface e podem não permanecer sincronizados com posts recém-criados sem recarregar a página.
+- **Perfil:** algumas partes visuais são demonstrativas, como seguidores, descrição, edição do perfil e outros botões.
+- **Modo claro, ordenação e recursos sociais:** existem elementos visuais sem implementação funcional completa.
+- **Infraestrutura e qualidade:** não há migrations versionadas, testes automatizados configurados nem deploy público documentado.
 
-**Não utilize senhas reais nem exponha esta versão como um serviço de autenticação para usuários reais.** Antes de uma publicação pública interativa, seria necessário implementar autenticação segura, autorização, revisar os fluxos e testar a aplicação.
+**Não utilize senhas reais nem exponha esta configuração diretamente como um serviço de autenticação em produção.**
 
-## O que aprendi com o projeto
+## O que aprendi
 
-O Nodus serviu para colocar em prática:
+O Nodus foi uma oportunidade de praticar, em um único projeto:
 
-- Estruturação de interfaces com HTML e CSS e manipulação do DOM com JavaScript.
-- Eventos de interface, formulários e chamadas assíncronas com `fetch`.
-- Desenvolvimento de API REST usando Node.js e Express.
-- Validação de requisições com Zod e tratamento de erros.
-- Consultas SQL parametrizadas e conexão com PostgreSQL usando `pg`.
-- Persistência de dados e fundamentos de hash de senhas com bcrypt.
-- Investigação de bugs e integração entre frontend, backend e banco de dados.
+- HTML semântico, CSS responsivo e manipulação do DOM com JavaScript.
+- Formulários, eventos, modais e requisições assíncronas com `fetch`.
+- Estruturação de APIs com Node.js e Express.
+- Validação de dados com Zod e tratamento de respostas HTTP.
+- Consultas SQL parametrizadas, relacionamentos e transações no PostgreSQL.
+- Hash de senhas com `bcrypt`.
+- Autenticação baseada em sessões, cookies e autorização no backend.
+- Depuração, refatoração e integração entre frontend, API e banco de dados.
 
-Esta **V1 encerra a primeira etapa de aprendizado**. Melhorias futuras são possíveis, mas não fazem parte do escopo necessário para registrar o Nodus como meu primeiro projeto full-stack.
+A **v2.0 encerra essa etapa de aprendizado**. O objetivo principal do Nodus foi evoluir meu conhecimento em desenvolvimento web full-stack, e não construir uma rede social completa.
 
 ---
 
 **Desenvolvido por [CadevV](https://github.com/CadevV) como projeto individual de estudos.**  
-**Repositório:** [Forum-Nodus](https://github.com/CadevV/Forum-Nodus)
+**Código-fonte:** [CadevV/Forum-Nodus](https://github.com/CadevV/Forum-Nodus)
