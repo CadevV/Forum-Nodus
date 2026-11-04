@@ -306,7 +306,19 @@ app.delete("/usuario/:id", verificarSecao, async (req, res) => {
     }
 
     await client.query("COMMIT");
-    return res.sendStatus(204);
+    
+    req.session.destroy((erro) => {
+        if (erro) {
+            console.log(erro)
+            return res.status(500).json({
+                erro: "Conta excluída, mas houve erro ao encerrar a sessão"
+            })
+        }
+
+        res.clearCookie("connect.sid")
+        return res.sendStatus(204)
+    })
+    
   } catch (erro) {
     console.log(erro);
     if (client) {

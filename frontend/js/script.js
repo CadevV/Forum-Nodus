@@ -239,6 +239,8 @@ async function deletarConta() {
 
   const id = usuario.id
 
+  if (!confirm("Deseja realmente excluir sua conta?")) return
+
   const resposta = await deleteContaApi(id)
 
   if(!resposta){

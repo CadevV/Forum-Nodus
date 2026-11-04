@@ -87,6 +87,8 @@ async function deletePost(event) {
 
     const id = botao.dataset.id
 
+    if (!confirm("Deseja realmente excluir sua conta?")) return
+
     const resposta = await deletePostApi(id)
 
     if(!resposta){

@@ -155,7 +155,7 @@ async function deletePostApi(id) {
             credentials: "include"
         })
 
-        if(!resposta){
+        if(!resposta.ok){
             throw new Error("Erro ao tentar Excluir Publicação")
         }
 
@@ -172,7 +172,7 @@ async function deleteContaApi(id) {
             credentials: "include"
         })
 
-        if(!resposta){
+        if(!resposta.ok){
             throw new Error("Erro ao tentar Excluir Usuario")
         }
 
