@@ -1,22 +1,23 @@
-const user = localStorage.getItem("user");
-const userValid = JSON.parse(user);
 const perfilNome = document.querySelector(".nomePerfil");
 const postsUser = document.querySelector(".postsUser");
-const containerPosts = document.querySelector('.containerPosts');
+const containerPosts = document.querySelector(".containerPosts");
 
 let listaPost = [];
 
-function verificarLogado() {
-  const userVeri = localStorage.getItem("user");
-  const userValidVeri = JSON.parse(userVeri);
-  if (!userValidVeri || !userValidVeri.logado) {
+async function verificarLogado() {
+  const usuario = await authApi();
+  if (!usuario || !usuario.id) {
     window.location.href = "./../frontend/index.html";
     return;
   }
 }
 
 async function montarPerfil() {
-  const nomePerfil = userValid.name;
+  const usuario = await authApi();
+
+  if (!usuario) return;
+
+  const nomePerfil = usuario.name;
 
   document.title = `Nodus | ${nomePerfil}`;
 
@@ -25,13 +26,13 @@ async function montarPerfil() {
   const posts = await recuperarPostApi();
   listaPost.push(...posts);
 
-  const postsUsuario = listaPost.filter(el => el.autor == nomePerfil);
+  const postsUsuario = listaPost.filter((el) => el.autor == nomePerfil);
 
   const quantidadePosts = postsUsuario.length;
 
   postsUser.textContent = quantidadePosts;
 
-  for(let i = 0; i<quantidadePosts; i++){
+  for (let i = 0; i < quantidadePosts; i++) {
     const elementNewPost = document.createElement("article");
     elementNewPost.classList.add("boxPost");
 
@@ -72,6 +73,6 @@ async function montarPerfil() {
 
 verificarLogado();
 
-if(userValid && userValid.logado){
-    montarPerfil();
+if (montarPerfil) {
+  montarPerfil();
 }

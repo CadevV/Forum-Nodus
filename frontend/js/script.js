@@ -1,60 +1,60 @@
 const inputSearch = document.querySelector(".inputSearchPost");
-const searchMobile = document.querySelector(".searchPost")
-const btnsOptionsHeader =  document.querySelectorAll('.btnOption')
-const btnSearchPostMobile = document.querySelector(".headerSearchMobile")
+const searchMobile = document.querySelector(".searchPost");
+const btnConfig = document.querySelector('.headerConfig')
+const btnsOptionsHeader = document.querySelectorAll(".btnOption");
+const btnSearchPostMobile = document.querySelector(".headerSearchMobile");
 const btnOpenModal = document.querySelector(".headerNewPost");
-const boxFiltros = document.getElementById('listaFiltros')
-const btnsFiltros = document.querySelectorAll('.linkExplorer')
+const boxFiltros = document.getElementById("listaFiltros");
+const btnsFiltros = document.querySelectorAll(".linkExplorer");
 const btnOpenLogin = document.querySelector(".headerAcont");
 const btnCloseModal = document.querySelectorAll(".btnCloseModal");
 const modalPost = document.querySelector(".overlayModalPost");
 const boxModalPost = document.querySelector(".modalPost");
 const modalLogin = document.querySelector(".overlayModalLogin");
 const boxModalLogin = document.querySelector(".modalLogin");
+const modalConfig = document.querySelector(".overlayModalConfig");
+const boxModalConfig = document.querySelector(".modalConfig");
 const formPost = document.querySelector(".formModalPost");
 const inputTituloUsuario = document.querySelector(".inputModalPost");
 const inputTextareaUsuario = document.querySelector(".textareaModalPost");
 const containerPosts = document.querySelector(".containerPosts");
-const optionCadastroModal = document.querySelectorAll('.optionCadastro')
-const optionPerfilModal = document.querySelectorAll('.optionPerfil')
-const btnDeslogar = document.getElementById('btnDeslogar')
+const optionCadastroModal = document.querySelectorAll(".optionCadastro");
+const optionPerfilModal = document.querySelectorAll(".optionPerfil");
+const btnDeslogar = document.getElementById("btnDeslogar");
 
 const postFront = [];
-const postFrontHtml = []
-const userUsuario = localStorage.getItem('user')
-const userObject = JSON.parse(userUsuario)
+const postFrontHtml = [];
 
 function filtroPosts(event) {
-  const btnClicado = event.target
+  const btnClicado = event.target;
 
-  if(btnClicado.classList.contains('linkExplorer')){
-    btnsFiltros.forEach(element => {
-      element.classList.remove("select")
+  if (btnClicado.classList.contains("linkExplorer")) {
+    btnsFiltros.forEach((element) => {
+      element.classList.remove("select");
     });
 
-    btnClicado.classList.add('select')
-    const respostaFiltro = btnClicado.textContent.toLowerCase()
+    btnClicado.classList.add("select");
+    const respostaFiltro = btnClicado.textContent.toLowerCase();
 
-    postFrontHtml.forEach((el, index) =>{
-      el.classList.add('off')
-      
-      const dadosPost = postFront[index]
+    postFrontHtml.forEach((el, index) => {
+      el.classList.add("off");
 
-      if(respostaFiltro === "geral"){
-        el.classList.remove('off')
+      const dadosPost = postFront[index];
+
+      if (respostaFiltro === "geral") {
+        el.classList.remove("off");
+      } else if (dadosPost && dadosPost.tags.includes(respostaFiltro)) {
+        el.classList.remove("off");
       }
-      else if(dadosPost && dadosPost.tags.includes(respostaFiltro)){
-        el.classList.remove('off')
-      }
-    })
+    });
   }
 }
 
-function openSearchMobile(){
-  btnsOptionsHeader.forEach(element => {
-    element.classList.toggle('active')
+function openSearchMobile() {
+  btnsOptionsHeader.forEach((element) => {
+    element.classList.toggle("active");
   });
-  searchMobile.classList.toggle('active')
+  searchMobile.classList.toggle("active");
 }
 
 function openModalPost(modal, boxModal) {
@@ -67,47 +67,52 @@ function closeModalPost(modal, boxModal) {
   boxModal.classList.remove("active");
 }
 
-function logicaCadastroPerfil(){
-  if(!userObject || !userObject.logado){
-    optionCadastroModal.forEach(el => {
-      el.classList.add('active')
-    })
-
-    optionPerfilModal.forEach(el => {
-      el.classList.remove('active')
+async function logicaCadastroPerfil() {
+  const usuario = await authApi();
+  if (!usuario || !usuario.id) {
+    optionCadastroModal.forEach((el) => {
+      el.classList.add("active");
     });
-    return
-  } else if(userObject.logado){
-    optionCadastroModal.forEach(el => {
-      el.classList.remove('active')
-    })
 
-    optionPerfilModal.forEach(el => {
-      el.classList.add('active')
+    optionPerfilModal.forEach((el) => {
+      el.classList.remove("active");
+    });
+    return;
+  } else if (usuario.id) {
+    optionCadastroModal.forEach((el) => {
+      el.classList.remove("active");
+    });
+
+    optionPerfilModal.forEach((el) => {
+      el.classList.add("active");
     });
   }
 }
 
 function buscarPost() {
   const valorSearch = inputSearch.value;
-  const valorSearchTratado = valorSearch.toLowerCase().trim()
+  const valorSearchTratado = valorSearch.toLowerCase().trim();
   const postAtuais = document.querySelectorAll(".boxPost");
 
   postAtuais.forEach((post) => {
-    const titulo = post.querySelector(".titlePost").textContent.toLowerCase().trim();
+    const titulo = post
+      .querySelector(".titlePost")
+      .textContent.toLowerCase()
+      .trim();
     if (titulo.includes(valorSearchTratado)) {
       post.classList.remove("off");
-      return
+      return;
     }
     post.classList.add("off");
   });
 }
 
 async function criarPost() {
-  if(!userObject ||!userObject.logado){
-    console.log("usuario não logado")
-    window.location.href = './../frontend/login.html'
-    return
+  const usuario = await authApi();
+  if (!usuario || !usuario.id) {
+    console.log("usuario não logado");
+    window.location.href = "./../frontend/login.html";
+    return;
   }
 
   const assuntoSelecionado = document.querySelector("input[name=tag]:checked");
@@ -121,7 +126,7 @@ async function criarPost() {
   if (!valorAssunto || !valorTitulo || !valorConteudo) return;
 
   const newPost = {
-    user: userObject.name,
+    user: usuario.name,
     tags: valorAssunto,
     titulo: valorTitulo,
     conteudo: valorConteudo,
@@ -151,12 +156,12 @@ async function criarPost() {
             </p>
         </div>
     `;
-  const usuarioPost = elementNewPost.querySelector('.usuarioPost')
+  const usuarioPost = elementNewPost.querySelector(".usuarioPost");
   const tag = elementNewPost.querySelector(".tag");
   const titulo = elementNewPost.querySelector(".titlePost");
   const conteudo = elementNewPost.querySelector(".contPost");
 
-  usuarioPost.textContent = userObject.name
+  usuarioPost.textContent = usuario.name;
   tag.textContent = valorAssunto;
   titulo.textContent = valorTitulo.trim();
   conteudo.textContent = valorConteudo.trim();
@@ -204,32 +209,30 @@ async function recuperarPost() {
                 </p>
             </div>
         `;
-    const usuario = elementNewPost.querySelector('.usuarioPost')
+    const usuario = elementNewPost.querySelector(".usuarioPost");
     const tag = elementNewPost.querySelector(".tag");
     const titulo = elementNewPost.querySelector(".titlePost");
     const conteudo = elementNewPost.querySelector(".contPost");
 
-    usuario.textContent = postFront[i].autor
-    tag.textContent = postFront[i].tags
-    titulo.textContent = postFront[i].titulo
-    conteudo.textContent = postFront[i].conteudo
+    usuario.textContent = postFront[i].autor;
+    tag.textContent = postFront[i].tags;
+    titulo.textContent = postFront[i].titulo;
+    conteudo.textContent = postFront[i].conteudo;
 
     containerPosts.appendChild(elementNewPost);
-    postFrontHtml.push(elementNewPost)
+    postFrontHtml.push(elementNewPost);
   }
 }
 
-function deslogarConta(){
-    userObject.logado = false
-
-    localStorage.removeItem("user")
+async function deslogarConta() {
+  const logout = await logoutApi();
 }
 
-btnSearchPostMobile.addEventListener('click', openSearchMobile)
+btnSearchPostMobile.addEventListener("click", openSearchMobile);
 
-boxFiltros.addEventListener('click', (event)=>{
-  filtroPosts(event)
-})
+boxFiltros.addEventListener("click", (event) => {
+  filtroPosts(event);
+});
 
 btnOpenModal.addEventListener("click", () => {
   openModalPost(modalPost, boxModalPost);
@@ -241,16 +244,26 @@ btnCloseModal.forEach((element) => {
   });
 });
 
+btnOpenLogin.addEventListener("click", () => {
+  logicaCadastroPerfil();
+  openModalPost(modalLogin, boxModalLogin);
+});
+
 btnCloseModal.forEach((element) => {
   element.addEventListener("click", () => {
     closeModalPost(modalLogin, boxModalLogin);
   });
 });
 
-btnOpenLogin.addEventListener("click", () => {
-  logicaCadastroPerfil()
-  openModalPost(modalLogin, boxModalLogin);
-});
+btnConfig.addEventListener('click', ()=>{
+  openModalPost(modalConfig, boxModalConfig)
+})
+
+btnCloseModal.forEach((element) =>{
+  element.addEventListener('click', ()=>{
+    closeModalPost(modalConfig, boxModalConfig)
+  })
+})
 
 inputSearch.addEventListener("input", buscarPost);
 formPost.addEventListener("submit", (event) => {
@@ -258,9 +271,9 @@ formPost.addEventListener("submit", (event) => {
   criarPost();
 });
 
-btnDeslogar.addEventListener('click', ()=>{
-  deslogarConta()
-  closeModalPost(modalLogin, boxModalLogin)
-})
+btnDeslogar.addEventListener("click", () => {
+  deslogarConta();
+  closeModalPost(modalLogin, boxModalLogin);
+});
 
 recuperarPost();

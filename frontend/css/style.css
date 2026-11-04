@@ -110,7 +110,7 @@ body::-webkit-scrollbar{
     display: none;
 }
 
-.overlayModalPost, .overlayModalLogin{
+.overlayModalPost, .overlayModalLogin, .overlayModalConfig{
     display: none;
     position: fixed;
     inset: 50%;
@@ -121,7 +121,7 @@ body::-webkit-scrollbar{
     justify-content: center;
 }
 
-.modalPost, .modalLogin{
+.modalPost, .modalLogin, .modalConfig{
     opacity: 0;
     background: var(--sideBar);
     width: 40%;
@@ -138,13 +138,17 @@ body::-webkit-scrollbar{
     justify-content: space-between;
 }
 
-.modalPost.active, .modalLogin.active{
+.modalConfig{
+    height: 80%;
+}
+
+.modalPost.active, .modalLogin.active, .modalConfig.active{
     opacity: 1;
     animation: aparecerModal .5s ease-in-out;
     display: flex;
 }
 
-.overlayModalPost.active, .overlayModalLogin.active{
+.overlayModalPost.active, .overlayModalLogin.active, .overlayModalConfig.active{
     display: flex;
     width: 100%;
     height: 100vh;
@@ -290,6 +294,27 @@ body::-webkit-scrollbar{
 
 .textareaModalPost:focus{
     outline: 1px solid var(--roxoPrincipal);
+}
+
+.boxBtnCriarPost{
+    width: 100%;
+    display: flex;
+}
+
+.btnCriarPost{
+    border-radius: 5px;
+    background: var(--textoPrincipal);
+    border: none;
+    color: var(--fundoPrincipal);
+    padding: 10px 5px;
+    aspect-ratio: 16/9;
+    box-shadow: 1px 1px 1px 1px var(--roxoHover);
+    transition: transform .5s ease-in-out, box-shadow .5s ease-in-out;
+}
+
+.btnCriarPost:hover{
+    transform: translateY(4px);
+    box-shadow: none;
 }
 
 .containerLayout{
@@ -790,7 +815,7 @@ body::-webkit-scrollbar{
         flex-direction: row;
         gap: 5px;
     }
-    
+
     .sidebarExplorer, .sidebarHot{
         display: none;
     }
@@ -805,9 +830,13 @@ body::-webkit-scrollbar{
         min-width: 0;
     }
 
-    .modalPost, .modalLogin{
+    .modalPost, .modalLogin, .modalConfig{
         width: 90%;
         height: 70%;
+    }
+
+    .boxBtnCriarPost{
+        justify-content: center;
     }
 
     .modalLogin h2{
