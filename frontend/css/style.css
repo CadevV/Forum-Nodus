@@ -140,6 +140,11 @@ body::-webkit-scrollbar{
 
 .modalConfig{
     height: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 5px;
 }
 
 .modalPost.active, .modalLogin.active, .modalConfig.active{
@@ -778,6 +783,40 @@ body::-webkit-scrollbar{
     border-bottom: 1px solid var(--textoPrincipal);
 }
 
+.infoPostBaixo{
+    width: 100%;
+    display: flex;
+    gap: 5px;
+}
+
+.infoPostBaixo .contPost{
+    flex: 1;
+}
+
+.delBtn{
+    display: flex;
+    flex: 0;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.delBtn button{
+    display: flex;
+    border-radius: 5px;
+    border: none;
+    padding: 5px;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    transition: .5s ease-in-out;
+}
+
+.delBtn button:hover{
+    transform: translateY(4px);
+    background: var(--erro);
+    color: white;
+}
+
 @media (max-width: 768px) {
     .headerNodus{
         justify-content: space-between;
@@ -874,5 +913,13 @@ body::-webkit-scrollbar{
     /* PERFIL */
     .imgPerfil{
         display: none;
+    }
+
+    .infoPostBaixo{
+        flex-direction: column;
+    }
+
+    .delBtn{
+        justify-content: center;
     }
 }

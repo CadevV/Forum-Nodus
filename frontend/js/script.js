@@ -14,6 +14,7 @@ const modalLogin = document.querySelector(".overlayModalLogin");
 const boxModalLogin = document.querySelector(".modalLogin");
 const modalConfig = document.querySelector(".overlayModalConfig");
 const boxModalConfig = document.querySelector(".modalConfig");
+const btnDelAccont = document.querySelector('.delUser')
 const formPost = document.querySelector(".formModalPost");
 const inputTituloUsuario = document.querySelector(".inputModalPost");
 const inputTextareaUsuario = document.querySelector(".textareaModalPost");
@@ -226,6 +227,27 @@ async function recuperarPost() {
 
 async function deslogarConta() {
   const logout = await logoutApi();
+  logicaCadastroPerfil();
+}
+
+async function deletarConta() {
+  const usuario = await authApi()
+
+  if(!usuario){
+    return console.log('Usuario não esta logado')
+  }
+
+  const id = usuario.id
+
+  const resposta = await deleteContaApi(id)
+
+  if(!resposta){
+    return console.log('erro ao excluir conta')
+  }
+
+  closeModalPost(modalConfig, boxModalConfig)
+
+  location.reload();
 }
 
 btnSearchPostMobile.addEventListener("click", openSearchMobile);
@@ -263,6 +285,10 @@ btnCloseModal.forEach((element) =>{
   element.addEventListener('click', ()=>{
     closeModalPost(modalConfig, boxModalConfig)
   })
+})
+
+btnDelAccont.addEventListener('click', ()=>{
+  deletarConta()
 })
 
 inputSearch.addEventListener("input", buscarPost);

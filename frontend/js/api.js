@@ -148,5 +148,38 @@ async function authApi() {
   }
 }
 
+async function deletePostApi(id) {
+    try{
+        const resposta = await fetch(`${URLBASE}/post/${id}`,{
+            method: "DELETE",
+            credentials: "include"
+        })
+
+        if(!resposta){
+            throw new Error("Erro ao tentar Excluir Publicação")
+        }
+
+        return true
+    } catch (erro) {
+        return console.log(erro)
+    }
+}
+
+async function deleteContaApi(id) {
+    try{
+        const resposta = await fetch(`${URLBASE}/usuario/${id}`,{
+            method: "DELETE",
+            credentials: "include"
+        })
+
+        if(!resposta){
+            throw new Error("Erro ao tentar Excluir Usuario")
+        }
+
+        return true
+    } catch (erro) {
+        return console.log(erro)
+    }
+}
 health();
 healthBanco();
