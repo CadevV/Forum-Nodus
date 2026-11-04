@@ -12,8 +12,10 @@ const port = process.env.PORT || 3000
 const PgSession = connectPgSimple(session)
 
 app.use(express.json())
-app.use(cors())
-
+app.use(cors({
+    origin: "http://127.0.0.1:5500",
+    credentials: true
+}))
 app.use(session({
     store: new PgSession({
         pool: pool,
@@ -42,7 +44,6 @@ function verificarSecao(req, res, next){
 const keyHash = 12
 
 const postValidado = z.object({
-    user: z.string(),
     tags: z.string().toLowerCase(),
     titulo: z.string().min(3).max(20),
     conteudo: z.string().min(5).max(200)
@@ -61,7 +62,7 @@ const userValidLogin = z.object({
     pass: z.string()
 })
 
-app.post('/post', async (req, res)=>{
+app.post('/post', verificarSecao , async (req, res)=>{
     try {
         const resultado = postValidado.safeParse(req.body)
 
@@ -70,15 +71,29 @@ app.post('/post', async (req, res)=>{
         }
         
         const dados = resultado.data
+        const sessao = req.session.userId
+
+        const consultaNome = await pool.query(
+            `SELECT nameuser FROM tbUser WHERE id = $1`,
+            [sessao]
+        )
+
+        if(consultaNome.rowCount === 0){
+            return res.status(404).json({
+                "Usuario": "Não encontrado"
+            })
+        }
+
+        const respostaConsulta = consultaNome.rows[0].nameuser
 
         const respostaBanco = await pool.query(
             `
             INSERT INTO tbPost
-            (tags, autor, titulo, conteudo)
-            VALUES ($1, $2, $3, $4)
+            (tags, autor, titulo, conteudo, usuario_id)
+            VALUES ($1, $2, $3, $4, $5)
             RETURNING *
             `,
-            [dados.tags, dados.user, dados.titulo, dados.conteudo]
+            [dados.tags, respostaConsulta, dados.titulo, dados.conteudo, sessao]
         )
 
         return res.status(201).json(`Post Criado`)
@@ -111,14 +126,33 @@ app.delete('/post/:id', verificarSecao, async (req, res) =>{
             return res.status(400).json({ erro: 'id inválido' })
         }
 
+        const consulta = await pool.query(
+            `SELECT usuario_id FROM tbPost WHERE id = $1`,
+            [resultado.data]
+        )
+        
+        const sessao = req.session.userId
+        if(consulta.rowCount == 0){
+            return res.status(404).json({
+                "Post": "Inexistente"
+            })
+        }
+        const respostaConsulta = consulta.rows[0].usuario_id
+
+        if(sessao !== respostaConsulta){
+            return res.status(403).json({
+                "Erro": "Você não tem permissão para excluir este post"
+            })
+        }
+
         const id = resultado.data
 
-        const consulta = await pool.query(
-            `DELETE FROM tbPost WHERE id = $1`,
-            [id]
+        const consultaDelete = await pool.query(
+            `DELETE FROM tbPost WHERE id = $1 AND usuario_id = $2`,
+            [id, sessao]
         )
 
-        if(consulta.rowCount === 0){
+        if(consultaDelete.rowCount === 0){
             return res.status(404).json({"Post": "Não encontrado"})
         }
         return res.sendStatus(204)
@@ -205,13 +239,29 @@ app.post('/login', async (req, res) =>{
             })
         }
 
-        req.session.userId = usuario.id
-        return res.status(200).json({
-            id: usuario.id,
-            name: usuario.nameuser,
-            logado: true
-        })
+        req.session.regenerate((erroSessao)=>{
+            if(erroSessao){
+                return res.status(500).json({
+                    "Erro": "Criar sessão"
+                })
+            }
 
+            req.session.userId = usuario.id
+        
+            req.session.save((erroSessao)=>{
+                if(erroSessao){
+                    return res.status(500).json({
+                        "Erro": "Salvar sessão"
+                    })
+                }
+
+                return res.status(200).json({
+                id: usuario.id,
+                name: usuario.nameuser,
+                logado: true
+            })
+            })
+        })
     } catch (erro) {
         console.log("ERRO", erro.message)
 
@@ -221,7 +271,8 @@ app.post('/login', async (req, res) =>{
     }
 })
 
-app.delete('/usuario/:id', async (req, res) =>{
+app.delete('/usuario/:id', verificarSecao ,async (req, res) =>{
+    let client
     try{
         const resposta = schemaId.safeParse(req.params.id)
 
@@ -229,21 +280,43 @@ app.delete('/usuario/:id', async (req, res) =>{
             return res.status(400).json("Falha na Requisição")
         }
 
+        const sessao = req.session.userId
         const id = resposta.data
 
-        const consulta = await pool.query(
+        if(id != sessao){
+            return res.status(403).json({
+                "Erro": "Permissão"
+            })
+        }
+        
+        client = await pool.connect()
+
+        await client.query('BEGIN')
+        const consultaPost = await client.query(
+            `DELETE FROM tbPost WHERE usuario_id = $1`,
+            [sessao]
+        )
+
+        const consulta = await client.query(
             `DELETE FROM tbUser WHERE id = $1`,
-            [id]
+            [sessao]
         )
 
         if(consulta.rowCount === 0){
+            await client.query("ROLLBACK")
             return res.status(404).json({"Usuario": "Não Encontrado"})
         }
 
+        await client.query("COMMIT")
         return res.sendStatus(204)
     } catch (erro){
         console.log(erro)
+        if(client){
+            await client.query("ROLLBACK")
+        }
         return res.status(500).json("Erro no Servidor")
+    } finally{
+        client?.release()
     }
 })
 
@@ -270,6 +343,55 @@ app.get("/usuario/:id", async (req, res) =>{
     } catch (erro){
         console.log(erro)
         return res.status(500).json("Erro no servidor")
+    }
+})
+
+app.get('/auth/me', verificarSecao, async (req, res) => {
+    try {
+        const sessao  = req.session.userId
+
+        const consulta = await pool.query(
+            `SELECT nameuser, id FROM tbUser WHERE id = $1`,
+            [sessao]
+        )
+
+        if(consulta.rowCount === 0){
+            return res.status(401).json({
+                "Usuario": "Não encontrado"
+            })
+        }
+        const usuarioEncontrado = consulta.rows[0]
+        
+
+        return res.status(200).json({
+            "id": usuarioEncontrado.id,
+            "name": usuarioEncontrado.nameuser,
+        })
+    } catch (erro){
+        console.log(erro)
+        return res.status(500).json({
+            "Erro": "Interno"
+        })
+    }
+})
+
+app.post('/logout', (req, res) =>{
+    try {
+        req.session.destroy((erro)=>{
+            if(erro){
+                return res.status(500).json({
+                    'Erro': "encerrar Sessão"
+                })
+            }
+
+            res.clearCookie("connect.sid")
+            return res.sendStatus(204)
+        })
+    } catch (erro) {
+        console.log(erro)
+        return res.status(500).json({
+            "Erro": "Interno"
+        })
     }
 })
 
